@@ -56,6 +56,7 @@ class _MainShellState extends State<MainShell> {
   int _successStreak = 0;
   int _struggleStreak = 0;
   bool _adaptiveAssistHint = false;
+  List<String> _recentEvents = const [];
   DateTime? _lastUpdatedAt;
 
   static const List<({String label, IconData icon})> _tabs = [
@@ -174,6 +175,7 @@ class _MainShellState extends State<MainShell> {
           successStreak: _successStreak,
           struggleStreak: _struggleStreak,
           recommendationText: _learningRecommendation,
+          recentEvents: _recentEvents.reversed.toList(),
         );
       default:
         return ParentModeScreen(
@@ -235,6 +237,7 @@ class _MainShellState extends State<MainShell> {
       _successStreak = snapshot.successStreak;
       _struggleStreak = snapshot.struggleStreak;
       _adaptiveAssistHint = snapshot.adaptiveAssistHint;
+      _recentEvents = snapshot.recentEvents;
       _lastUpdatedAt = snapshot.lastUpdatedAt;
       _isLoading = false;
     });
@@ -252,6 +255,7 @@ class _MainShellState extends State<MainShell> {
       _successStreak++;
       _struggleStreak = 0;
       _adaptiveAssistHint = false;
+      _recordEvent('Geschafft');
 
       if (_successStreak >= 2) {
         _successStreak = 0;
@@ -265,12 +269,14 @@ class _MainShellState extends State<MainShell> {
     setState(() {
       _struggleStreak++;
       _successStreak = 0;
+      _recordEvent('Schwer');
 
       if (_struggleStreak >= 2) {
         _struggleStreak = 0;
         _adaptiveAssistHint = true;
         if (_currentLearningStepIndex > 0) {
           _currentLearningStepIndex--;
+          _recordEvent('Schritt-zurueck');
         }
       }
     });
@@ -284,6 +290,7 @@ class _MainShellState extends State<MainShell> {
     }
 
     _completedLoops++;
+    _recordEvent('Loop-abgeschlossen');
     _currentLearningStepIndex = 0;
     _rotateTemplateAfterCompletedLoop();
   }
@@ -305,6 +312,7 @@ class _MainShellState extends State<MainShell> {
       _successStreak = 0;
       _struggleStreak = 0;
       _adaptiveAssistHint = false;
+      _recordEvent('Manuell-zurueck');
     });
     _saveState();
   }
@@ -315,6 +323,7 @@ class _MainShellState extends State<MainShell> {
       _successStreak = 0;
       _struggleStreak = 0;
       _adaptiveAssistHint = false;
+      _recordEvent('Loop-reset');
     });
     _saveState();
   }
@@ -340,6 +349,7 @@ class _MainShellState extends State<MainShell> {
       visionAssist: _profile.visionAssist,
       successStreak: _successStreak,
       struggleStreak: _struggleStreak,
+      recentEvents: _recentEvents.reversed.take(10).toList(),
       generatedAt: now,
     );
   }
@@ -357,6 +367,7 @@ class _MainShellState extends State<MainShell> {
       successStreak: _successStreak,
       struggleStreak: _struggleStreak,
       adaptiveAssistHint: _adaptiveAssistHint,
+      recentEvents: _recentEvents,
       lastUpdatedAt: now,
     );
 
@@ -372,6 +383,21 @@ class _MainShellState extends State<MainShell> {
     setState(() {
       _currentIndex = 3;
     });
+  }
+
+  void _recordEvent(String type) {
+    final now = DateTime.now().toLocal();
+    final hh = now.hour.toString().padLeft(2, '0');
+    final min = now.minute.toString().padLeft(2, '0');
+    final step = _activeTemplate.steps[_currentLearningStepIndex].label;
+    final event = '$hh:$min | $type | ${_activeTemplate.title} | $step';
+    final next = [..._recentEvents, event];
+    const maxEvents = 40;
+    if (next.length > maxEvents) {
+      _recentEvents = next.sublist(next.length - maxEvents);
+      return;
+    }
+    _recentEvents = next;
   }
 }
 

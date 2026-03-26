@@ -12,6 +12,7 @@ class ExportPayload {
     required this.visionAssist,
     required this.successStreak,
     required this.struggleStreak,
+    required this.recentEvents,
     required this.generatedAt,
   });
 
@@ -22,6 +23,7 @@ class ExportPayload {
   final bool visionAssist;
   final int successStreak;
   final int struggleStreak;
+  final List<String> recentEvents;
   final DateTime generatedAt;
 }
 
@@ -46,7 +48,17 @@ class ExportService {
       ..writeln('- Hilfe-Serie: ${payload.struggleStreak}')
       ..writeln()
       ..writeln('## Naechste Empfehlung')
-      ..writeln(_nextRecommendation(payload));
+      ..writeln(_nextRecommendation(payload))
+      ..writeln()
+      ..writeln('## Letzte Lernaktionen');
+
+    if (payload.recentEvents.isEmpty) {
+      content.writeln('- Keine Aktionen gespeichert.');
+    } else {
+      for (final event in payload.recentEvents.take(10)) {
+        content.writeln('- $event');
+      }
+    }
 
     await file.writeAsString(content.toString());
     return file;
@@ -82,6 +94,14 @@ class ExportService {
               pw.SizedBox(height: 12),
               pw.Text('Naechste Empfehlung:'),
               pw.Text(_nextRecommendation(payload)),
+              pw.SizedBox(height: 12),
+              pw.Text('Letzte Lernaktionen:'),
+              if (payload.recentEvents.isEmpty)
+                pw.Text('- Keine Aktionen gespeichert.')
+              else
+                ...payload.recentEvents
+                    .take(8)
+                    .map((event) => pw.Text('- $event')),
             ],
           );
         },

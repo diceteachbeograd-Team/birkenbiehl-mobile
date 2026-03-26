@@ -10,6 +10,7 @@ class LearningAppStateSnapshot {
     required this.successStreak,
     required this.struggleStreak,
     required this.adaptiveAssistHint,
+    required this.recentEvents,
     required this.lastUpdatedAt,
   });
 
@@ -21,6 +22,7 @@ class LearningAppStateSnapshot {
   final int successStreak;
   final int struggleStreak;
   final bool adaptiveAssistHint;
+  final List<String> recentEvents;
   final DateTime? lastUpdatedAt;
 
   factory LearningAppStateSnapshot.initial(String templateId) {
@@ -33,6 +35,7 @@ class LearningAppStateSnapshot {
       successStreak: 0,
       struggleStreak: 0,
       adaptiveAssistHint: false,
+      recentEvents: const [],
       lastUpdatedAt: null,
     );
   }
@@ -47,6 +50,7 @@ class LocalProgressStore {
   static const _keySuccessStreak = 'success_streak';
   static const _keyStruggleStreak = 'struggle_streak';
   static const _keyAdaptiveAssistHint = 'adaptive_assist_hint';
+  static const _keyRecentEvents = 'recent_events';
   static const _keyLastUpdatedAt = 'last_updated_at';
 
   Future<LearningAppStateSnapshot> load(String defaultTemplateId) async {
@@ -61,6 +65,7 @@ class LocalProgressStore {
       successStreak: prefs.getInt(_keySuccessStreak) ?? 0,
       struggleStreak: prefs.getInt(_keyStruggleStreak) ?? 0,
       adaptiveAssistHint: prefs.getBool(_keyAdaptiveAssistHint) ?? false,
+      recentEvents: prefs.getStringList(_keyRecentEvents) ?? const [],
       lastUpdatedAt: DateTime.tryParse(
         prefs.getString(_keyLastUpdatedAt) ?? '',
       ),
@@ -78,6 +83,7 @@ class LocalProgressStore {
     await prefs.setInt(_keySuccessStreak, snapshot.successStreak);
     await prefs.setInt(_keyStruggleStreak, snapshot.struggleStreak);
     await prefs.setBool(_keyAdaptiveAssistHint, snapshot.adaptiveAssistHint);
+    await prefs.setStringList(_keyRecentEvents, snapshot.recentEvents);
 
     if (snapshot.lastUpdatedAt != null) {
       await prefs.setString(

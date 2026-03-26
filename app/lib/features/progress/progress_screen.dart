@@ -9,6 +9,7 @@ class ProgressScreen extends StatelessWidget {
     required this.successStreak,
     required this.struggleStreak,
     required this.recommendationText,
+    required this.recentEvents,
   });
 
   final int completedLoops;
@@ -17,6 +18,7 @@ class ProgressScreen extends StatelessWidget {
   final int successStreak;
   final int struggleStreak;
   final String recommendationText;
+  final List<String> recentEvents;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,30 @@ class ProgressScreen extends StatelessWidget {
             subtitle: Text(recommendationText),
           ),
         ),
+        const SizedBox(height: 12),
+        Text(
+          'Letzte Lernaktionen',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: 8),
+        if (recentEvents.isEmpty)
+          const Card(
+            child: ListTile(
+              leading: Icon(Icons.hourglass_empty_rounded),
+              title: Text('Noch keine Lernaktionen gespeichert'),
+            ),
+          )
+        else
+          ...recentEvents
+              .take(8)
+              .map(
+                (event) => Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.history_rounded),
+                    title: Text(event),
+                  ),
+                ),
+              ),
       ],
     );
   }
