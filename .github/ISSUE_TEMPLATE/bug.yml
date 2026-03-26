@@ -1,0 +1,48 @@
+name: Bug report
+about: Use this template for blocking production bugs or playback issues that need immediate triage.
+title: "[bug] "
+labels: [bug]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for flagging this! Please give as much info as you can so we can reproduce and fix it quickly.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: Briefly describe what’s broken or behaving unexpectedly.
+      placeholder: "e.g. Audio cards ignore focus after restoring from sleep"
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: List the exact steps that trigger the issue (playback path, practice mode, etc.).
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - blocker
+        - high
+        - medium
+        - low
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Device, platform, version, network state, etc.
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Attachments/Logs
+      description: Link to screen recordings, crash logs, or console output.

@@ -1,0 +1,8 @@
+{
+  "skipInternalLinks": false,
+  "skipExternalLinks": false,
+  "retryOn429": true,
+  "retries": 2,
+  "timeout": 10000,
+  "userAgent": "birkenbiehl-mobile-link-checker"
+}

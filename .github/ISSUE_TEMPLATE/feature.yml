@@ -1,0 +1,44 @@
+name: Feature request
+about: Describe a new capability that would help Birkenbiehl Mobile reach learners faster.
+title: "[feature] "
+labels: [enhancement]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for dreaming big! Help us understand how this request impacts learners and why it belongs in Step 1.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: What should we build or improve?
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Value to learners or the product
+      description: Who benefits and how?
+  - type: textarea
+    id: success
+    attributes:
+      label: What success looks like
+      description: How will we know the feature delivered value?
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Help the team understand why this path is best.
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - low
+        - medium
+        - high
+        - critical
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Supporting material
+      description: Links to mockups, clips, or docs that describe the idea.

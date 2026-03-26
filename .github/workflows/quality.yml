@@ -1,0 +1,42 @@
+name: Quality checks
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    name: Markdown & YAML linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install tooling
+        run: |
+          npm install markdownlint-cli markdown-link-check
+          python -m pip install --upgrade pip
+          pip install yamllint
+
+      - name: Markdown lint
+        run: |
+          git ls-files -z '*.md' | xargs -0 -r npx markdownlint --config .github/markdownlint.json
+
+      - name: YAML lint
+        run: |
+          git ls-files -z '*.yml' '*.yaml' | xargs -0 -r yamllint
+
+      - name: Markdown link check
+        run: |
+          git ls-files -z '*.md' | xargs -0 -r npx markdown-link-check --config .github/markdown-link-check-config.json
