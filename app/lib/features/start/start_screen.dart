@@ -20,10 +20,7 @@ class StartScreen extends StatelessWidget {
 
     return ListView(
       children: [
-        Text(
-          'Start',
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
+        Text('Start', style: Theme.of(context).textTheme.headlineSmall),
         const SizedBox(height: 8),
         const Text('Heute: 3 kurze Schritte bis zur ersten sicheren Antwort.'),
         const SizedBox(height: 16),

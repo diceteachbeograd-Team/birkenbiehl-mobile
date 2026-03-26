@@ -5,8 +5,7 @@ class ListeningScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return ListView(
       children: [
         Text('Hoeren', style: Theme.of(context).textTheme.headlineSmall),
         const SizedBox(height: 8),

@@ -1,9 +1,4 @@
-enum LearningStep {
-  decode,
-  listen,
-  speak,
-  transfer,
-}
+enum LearningStep { decode, listen, speak, transfer }
 
 extension LearningStepLabel on LearningStep {
   String get label {

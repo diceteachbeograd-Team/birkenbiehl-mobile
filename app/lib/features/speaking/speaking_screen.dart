@@ -5,8 +5,7 @@ class SpeakingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return ListView(
       children: [
         Text('Sprechen', style: Theme.of(context).textTheme.headlineSmall),
         const SizedBox(height: 8),
