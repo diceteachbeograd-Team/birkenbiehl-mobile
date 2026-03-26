@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 
+import '../../core/i18n/app_strings.dart';
+
 class ListeningScreen extends StatefulWidget {
   const ListeningScreen({
     super.key,
     required this.onRoundSolved,
     required this.globalStars,
     required this.globalBadges,
+    required this.strings,
   });
 
   final ValueChanged<bool> onRoundSolved;
   final int globalStars;
   final int globalBadges;
+  final AppStrings strings;
 
   @override
   State<ListeningScreen> createState() => _ListeningScreenState();
@@ -48,7 +52,10 @@ class _ListeningScreenState extends State<ListeningScreen> {
 
     return ListView(
       children: [
-        Text('Hoeren Spiel', style: Theme.of(context).textTheme.headlineSmall),
+        Text(
+          widget.strings.listeningTitle,
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         const SizedBox(height: 8),
         Text(
           'Sterne: ${widget.globalStars} | Abzeichen: ${widget.globalBadges}',
@@ -59,8 +66,10 @@ class _ListeningScreenState extends State<ListeningScreen> {
         Card(
           child: ListTile(
             leading: const Icon(Icons.headphones_rounded),
-            title: Text('Runde ${_roundIndex + 1} von ${_rounds.length}'),
-            subtitle: Text('Lokal geloest: $_localScore'),
+            title: Text(
+              '${widget.strings.listeningRound} ${_roundIndex + 1}/${_rounds.length}',
+            ),
+            subtitle: Text('${widget.strings.listeningSolved}: $_localScore'),
           ),
         ),
         const SizedBox(height: 8),
@@ -80,7 +89,9 @@ class _ListeningScreenState extends State<ListeningScreen> {
                     });
                   },
                   icon: const Icon(Icons.volume_up_rounded),
-                  label: Text('Audio abspielen ($_playCount)'),
+                  label: Text(
+                    '${widget.strings.listeningPlayAudio} ($_playCount)',
+                  ),
                 ),
               ],
             ),
@@ -111,13 +122,13 @@ class _ListeningScreenState extends State<ListeningScreen> {
               ),
               title: Text(
                 _selectedOption == round.correct
-                    ? 'Richtig gehoert'
-                    : 'Fast! Noch mal hoeren.',
+                    ? widget.strings.listeningCorrect
+                    : widget.strings.listeningAlmost,
               ),
               subtitle: Text(
                 _selectedOption == round.correct
-                    ? 'Sehr gut. Du bekommst einen Stern.'
-                    : 'Tip: Audio 1-2x nochmal starten.',
+                    ? widget.strings.listeningCorrectHint
+                    : widget.strings.listeningWrongHint,
               ),
             ),
           ),
@@ -143,7 +154,11 @@ class _ListeningScreenState extends State<ListeningScreen> {
                 ? Icons.restart_alt_rounded
                 : Icons.arrow_forward_rounded,
           ),
-          label: Text(isFinished ? 'Spiel neu starten' : 'Naechste Runde'),
+          label: Text(
+            isFinished
+                ? widget.strings.listeningRestart
+                : widget.strings.listeningNext,
+          ),
         ),
       ],
     );

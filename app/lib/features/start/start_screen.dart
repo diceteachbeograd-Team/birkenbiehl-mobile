@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/i18n/app_strings.dart';
 import '../../core/models/assistive_profile.dart';
 
 class StartScreen extends StatelessWidget {
@@ -13,6 +14,7 @@ class StartScreen extends StatelessWidget {
     required this.gameBadges,
     required this.questProgress,
     required this.onStartLearning,
+    required this.strings,
   });
 
   final AssistiveProfile profile;
@@ -23,6 +25,7 @@ class StartScreen extends StatelessWidget {
   final int gameBadges;
   final int questProgress;
   final VoidCallback onStartLearning;
+  final AppStrings strings;
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +33,12 @@ class StartScreen extends StatelessWidget {
 
     return ListView(
       children: [
-        Text('Start', style: Theme.of(context).textTheme.headlineSmall),
+        Text(
+          strings.tabStart,
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         const SizedBox(height: 8),
-        const Text('Heute: 3 kurze Schritte bis zur ersten sicheren Antwort.'),
+        Text(strings.startTodayText),
         const SizedBox(height: 16),
         Semantics(
           label: 'Lernstart mit naechster Aufgabe',
@@ -41,27 +47,29 @@ class StartScreen extends StatelessWidget {
             key: const Key('startLearningButton'),
             onPressed: onStartLearning,
             icon: const Icon(Icons.play_arrow_rounded),
-            label: const Text('Naechste Aufgabe starten'),
+            label: Text(strings.startNextTask),
           ),
         ),
         const SizedBox(height: 12),
         Card(
           child: ListTile(
             leading: const Icon(Icons.route_rounded),
-            title: const Text('Birkenbihl-Lernloop'),
-            subtitle: Text('Aktuell: $currentStepLabel'),
+            title: Text(strings.startLearningLoop),
+            subtitle: Text('${strings.startCurrent}: $currentStepLabel'),
           ),
         ),
         const SizedBox(height: 8),
-        Text('Abgeschlossene Loops: $completedLoops'),
-        Text('Spielsterne: $gameStars | Abzeichen: $gameBadges'),
-        Text('Tagesquest: $questProgress/5'),
-        Text('Hilfen aktiv: $activeHelpText'),
+        Text('${strings.startCompletedLoops}: $completedLoops'),
+        Text(
+          '${strings.startGameStars}: $gameStars | ${strings.startBadges}: $gameBadges',
+        ),
+        Text('${strings.startDailyQuest}: $questProgress/5'),
+        Text('${strings.startHelpActive}: $activeHelpText'),
         const SizedBox(height: 8),
         Card(
           child: ListTile(
             leading: const Icon(Icons.tips_and_updates_rounded),
-            title: const Text('Empfohlener naechster Schritt'),
+            title: Text(strings.startRecommendation),
             subtitle: Text(recommendationText),
           ),
         ),

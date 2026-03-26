@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/i18n/app_strings.dart';
 import '../learning/models/exercise_template.dart';
 import '../learning/models/learning_step.dart';
 
@@ -15,6 +16,7 @@ class ExercisesScreen extends StatelessWidget {
     required this.onMarkNeedsHelp,
     required this.onPrevStep,
     required this.onReset,
+    required this.strings,
   });
 
   final ExerciseTemplate template;
@@ -26,6 +28,7 @@ class ExercisesScreen extends StatelessWidget {
   final VoidCallback onMarkNeedsHelp;
   final VoidCallback onPrevStep;
   final VoidCallback onReset;
+  final AppStrings strings;
 
   @override
   Widget build(BuildContext context) {
@@ -35,28 +38,29 @@ class ExercisesScreen extends StatelessWidget {
 
     return ListView(
       children: [
-        Text('Lernspiel', style: Theme.of(context).textTheme.headlineSmall),
+        Text(
+          strings.tabExercise,
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         const SizedBox(height: 8),
         Text('${template.level}: ${template.title}'),
         const SizedBox(height: 8),
         Text(template.prompt),
         const SizedBox(height: 12),
-        Text('Jetzt: ${currentStep.label}'),
+        Text('${strings.exerciseNow}: ${currentStep.label}'),
         const SizedBox(height: 6),
         Text(currentStep.hint),
         const SizedBox(height: 6),
         LinearProgressIndicator(value: progress),
         const SizedBox(height: 8),
-        Text('Lernhilfe v0: Erfolg $successStreak | Hilfe $struggleStreak'),
+        Text('${strings.exerciseSupport}: $successStreak | $struggleStreak'),
         const SizedBox(height: 8),
         if (adaptiveAssistHint)
-          const Card(
+          Card(
             child: ListTile(
               leading: Icon(Icons.lightbulb_rounded),
-              title: Text('Tipp aktiviert'),
-              subtitle: Text(
-                'Wir bleiben kurz im einfacheren Schritt mit mehr Hilfe.',
-              ),
+              title: Text(strings.exerciseTipEnabled),
+              subtitle: Text(strings.exerciseTipText),
             ),
           ),
         const SizedBox(height: 8),
@@ -89,7 +93,7 @@ class ExercisesScreen extends StatelessWidget {
                 key: const Key('prevLearningStepButton'),
                 onPressed: onPrevStep,
                 icon: const Icon(Icons.arrow_back_rounded),
-                label: const Text('Zurueck'),
+                label: Text(strings.exerciseBack),
               ),
             ),
             const SizedBox(width: 8),
@@ -98,7 +102,7 @@ class ExercisesScreen extends StatelessWidget {
                 key: const Key('resetLearningStepButton'),
                 onPressed: onReset,
                 icon: const Icon(Icons.refresh_rounded),
-                label: const Text('Neu'),
+                label: Text(strings.exerciseReset),
               ),
             ),
           ],
@@ -114,7 +118,7 @@ class ExercisesScreen extends StatelessWidget {
                   key: const Key('markNeedsHelpButton'),
                   onPressed: onMarkNeedsHelp,
                   icon: const Icon(Icons.support_rounded),
-                  label: const Text('Schwer'),
+                  label: Text(strings.exerciseTooHard),
                 ),
               ),
             ),
@@ -127,7 +131,7 @@ class ExercisesScreen extends StatelessWidget {
                   key: const Key('markSuccessButton'),
                   onPressed: onMarkSuccess,
                   icon: const Icon(Icons.check_rounded),
-                  label: const Text('Geschafft'),
+                  label: Text(strings.exerciseDone),
                 ),
               ),
             ),

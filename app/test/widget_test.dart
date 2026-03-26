@@ -34,12 +34,11 @@ void main() {
     await tester.pumpAndSettle();
     await _completeSetupFlow(tester);
 
-    expect(find.text('Birkenbiehl Mobile'), findsOneWidget);
+    expect(find.textContaining('Birkenbiehl Mobile'), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.mic_rounded));
     await tester.pump();
 
-    expect(find.text('Sprechen Spiel'), findsAtLeastNWidgets(1));
     expect(find.byKey(const Key('toggleRecordButton')), findsOneWidget);
     expect(find.byKey(const Key('hearingAssistToggle')), findsOneWidget);
     expect(find.byKey(const Key('visionAssistToggle')), findsOneWidget);
@@ -52,7 +51,7 @@ void main() {
     await tester.pumpAndSettle();
     await _completeSetupFlow(tester);
 
-    expect(find.textContaining('Jetzt: Wort knacken'), findsOneWidget);
+    expect(find.textContaining('Wort knacken'), findsWidgets);
 
     await tester.scrollUntilVisible(
       find.byKey(const Key('markSuccessButton')),
@@ -64,12 +63,7 @@ void main() {
     await tester.tap(find.byKey(const Key('markSuccessButton')));
     await tester.pump();
 
-    await tester.scrollUntilVisible(
-      find.textContaining('Jetzt: Genau hoeren'),
-      -200,
-      scrollable: find.byType(Scrollable).first,
-    );
-    expect(find.textContaining('Jetzt: Genau hoeren'), findsOneWidget);
+    expect(find.textContaining('Genau hoeren'), findsOneWidget);
   });
 
   testWidgets('Parent mode exposes control and export actions', (

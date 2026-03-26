@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 
+import '../../core/i18n/app_strings.dart';
+
 class SpeakingScreen extends StatefulWidget {
   const SpeakingScreen({
     super.key,
     required this.onAttemptRated,
     required this.globalStars,
     required this.globalBadges,
+    required this.strings,
   });
 
   final ValueChanged<bool> onAttemptRated;
   final int globalStars;
   final int globalBadges;
+  final AppStrings strings;
 
   @override
   State<SpeakingScreen> createState() => _SpeakingScreenState();
@@ -36,7 +40,7 @@ class _SpeakingScreenState extends State<SpeakingScreen> {
     return ListView(
       children: [
         Text(
-          'Sprechen Spiel',
+          widget.strings.speakingTitle,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(height: 8),
@@ -44,12 +48,14 @@ class _SpeakingScreenState extends State<SpeakingScreen> {
           'Sterne: ${widget.globalStars} | Abzeichen: ${widget.globalBadges}',
         ),
         const SizedBox(height: 8),
-        Text('Sticker verdient: $stickers'),
+        Text('${widget.strings.speakingStickers}: $stickers'),
         const SizedBox(height: 12),
         Card(
           child: ListTile(
             leading: const Icon(Icons.record_voice_over_rounded),
-            title: Text('Aufgabe ${_promptIndex + 1}/${_prompts.length}'),
+            title: Text(
+              '${widget.strings.speakingTask} ${_promptIndex + 1}/${_prompts.length}',
+            ),
             subtitle: Text(prompt),
           ),
         ),
@@ -62,15 +68,19 @@ class _SpeakingScreenState extends State<SpeakingScreen> {
             });
           },
           icon: Icon(_isRecording ? Icons.stop_rounded : Icons.mic_rounded),
-          label: Text(_isRecording ? 'Aufnahme stoppen' : 'Aufnahme starten'),
+          label: Text(
+            _isRecording
+                ? widget.strings.speakingStop
+                : widget.strings.speakingStart,
+          ),
         ),
         const SizedBox(height: 8),
         if (_isRecording)
-          const Card(
+          Card(
             child: ListTile(
               leading: Icon(Icons.graphic_eq_rounded),
-              title: Text('Aufnahme laeuft'),
-              subtitle: Text('Sprich den Satz in deinem Tempo nach.'),
+              title: Text(widget.strings.speakingRecording),
+              subtitle: Text(widget.strings.speakingRecordingHint),
             ),
           ),
         const SizedBox(height: 8),
@@ -81,7 +91,7 @@ class _SpeakingScreenState extends State<SpeakingScreen> {
                 key: const Key('speakingGoodButton'),
                 onPressed: () => _rateAttempt(true),
                 icon: const Icon(Icons.thumb_up_alt_rounded),
-                label: const Text('Hat geklappt'),
+                label: Text(widget.strings.speakingWorked),
               ),
             ),
             const SizedBox(width: 8),
@@ -90,7 +100,7 @@ class _SpeakingScreenState extends State<SpeakingScreen> {
                 key: const Key('speakingRetryButton'),
                 onPressed: () => _rateAttempt(false),
                 icon: const Icon(Icons.replay_rounded),
-                label: const Text('Nochmal'),
+                label: Text(widget.strings.speakingRetry),
               ),
             ),
           ],

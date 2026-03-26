@@ -124,7 +124,7 @@ class _MainShellState extends State<MainShell> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(child: _buildScreen(currentStepLabel)),
+            Expanded(child: _buildScreen(currentStepLabel, strings)),
             const SizedBox(height: 8),
             Semantics(
               label: 'Hoerhilfe umschalten',
@@ -177,7 +177,7 @@ class _MainShellState extends State<MainShell> {
     );
   }
 
-  Widget _buildScreen(String currentStepLabel) {
+  Widget _buildScreen(String currentStepLabel, AppStrings strings) {
     switch (_currentIndex) {
       case 0:
         return StartScreen(
@@ -189,18 +189,21 @@ class _MainShellState extends State<MainShell> {
           gameBadges: _gameBadges,
           questProgress: _questProgress,
           onStartLearning: _goToExercise,
+          strings: strings,
         );
       case 1:
         return SpeakingScreen(
           globalStars: _gameStars,
           globalBadges: _gameBadges,
           onAttemptRated: _handleSpeakingAttempt,
+          strings: strings,
         );
       case 2:
         return ListeningScreen(
           globalStars: _gameStars,
           globalBadges: _gameBadges,
           onRoundSolved: _handleListeningRound,
+          strings: strings,
         );
       case 3:
         return ExercisesScreen(
@@ -213,6 +216,7 @@ class _MainShellState extends State<MainShell> {
           onMarkNeedsHelp: _markNeedsHelp,
           onPrevStep: _prevLearningStep,
           onReset: _resetLearningLoop,
+          strings: strings,
         );
       case 4:
         return ProgressScreen(
@@ -226,6 +230,7 @@ class _MainShellState extends State<MainShell> {
           gameStars: _gameStars,
           gameBadges: _gameBadges,
           questProgress: _questProgress,
+          strings: strings,
         );
       default:
         return ParentModeScreen(
@@ -247,7 +252,7 @@ class _MainShellState extends State<MainShell> {
           onTemplateChanged: _setActiveTemplate,
           selectedUiLanguageCode: _uiLanguageCode,
           onUiLanguageChanged: _setUiLanguage,
-          strings: AppStrings.fromCode(_uiLanguageCode),
+          strings: strings,
           onClearHistory: _clearHistory,
           onExportMarkdown: _exportMarkdown,
           onExportPdf: _exportPdf,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core/i18n/app_strings.dart';
+
 class ProgressScreen extends StatelessWidget {
   const ProgressScreen({
     super.key,
@@ -13,6 +15,7 @@ class ProgressScreen extends StatelessWidget {
     required this.gameStars,
     required this.gameBadges,
     required this.questProgress,
+    required this.strings,
   });
 
   final int completedLoops;
@@ -25,41 +28,45 @@ class ProgressScreen extends StatelessWidget {
   final int gameStars;
   final int gameBadges;
   final int questProgress;
+  final AppStrings strings;
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        Text('Verlauf', style: Theme.of(context).textTheme.headlineSmall),
+        Text(
+          strings.tabProgress,
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         const SizedBox(height: 8),
-        Text('Aktuelle Uebung: $currentTemplateTitle'),
-        Text('Aktueller Schritt: $currentStepLabel'),
+        Text('${strings.progressCurrentExercise}: $currentTemplateTitle'),
+        Text('${strings.progressCurrentStep}: $currentStepLabel'),
         const SizedBox(height: 8),
-        Text('Abgeschlossene Loops: $completedLoops'),
-        Text('Spielsterne: $gameStars'),
-        Text('Abzeichen: $gameBadges'),
-        Text('Quest-Fortschritt: $questProgress/5'),
-        Text('Erfolgsserie: $successStreak'),
-        Text('Hilfeserie: $struggleStreak'),
+        Text('${strings.progressCompletedLoops}: $completedLoops'),
+        Text('${strings.progressGameStars}: $gameStars'),
+        Text('${strings.progressBadges}: $gameBadges'),
+        Text('${strings.progressQuest}: $questProgress/5'),
+        Text('${strings.progressSuccessSeries}: $successStreak'),
+        Text('${strings.progressHelpSeries}: $struggleStreak'),
         const SizedBox(height: 12),
         Card(
           child: ListTile(
             leading: const Icon(Icons.check_circle_outline_rounded),
-            title: const Text('Fortschritt wird lokal gespeichert'),
+            title: Text(strings.progressSaved),
             subtitle: Text(recommendationText),
           ),
         ),
         const SizedBox(height: 12),
         Text(
-          'Letzte Lernaktionen',
+          strings.progressRecentActions,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 8),
         if (recentEvents.isEmpty)
-          const Card(
+          Card(
             child: ListTile(
               leading: Icon(Icons.hourglass_empty_rounded),
-              title: Text('Noch keine Lernaktionen gespeichert'),
+              title: Text(strings.progressNoActions),
             ),
           )
         else
