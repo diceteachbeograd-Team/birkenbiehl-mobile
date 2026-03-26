@@ -13,6 +13,9 @@ class ExportPayload {
     required this.successStreak,
     required this.struggleStreak,
     required this.recentEvents,
+    required this.gameStars,
+    required this.gameBadges,
+    required this.questProgress,
     required this.generatedAt,
   });
 
@@ -24,6 +27,9 @@ class ExportPayload {
   final int successStreak;
   final int struggleStreak;
   final List<String> recentEvents;
+  final int gameStars;
+  final int gameBadges;
+  final int questProgress;
   final DateTime generatedAt;
 }
 
@@ -46,6 +52,9 @@ class ExportService {
       )
       ..writeln('- Erfolgsserie: ${payload.successStreak}')
       ..writeln('- Hilfe-Serie: ${payload.struggleStreak}')
+      ..writeln('- Spielsterne: ${payload.gameStars}')
+      ..writeln('- Abzeichen: ${payload.gameBadges}')
+      ..writeln('- Tagesquest: ${payload.questProgress}/5')
       ..writeln()
       ..writeln('## Naechste Empfehlung')
       ..writeln(_nextRecommendation(payload))
@@ -91,6 +100,9 @@ class ExportService {
               ),
               pw.Text('Erfolgsserie: ${payload.successStreak}'),
               pw.Text('Hilfe-Serie: ${payload.struggleStreak}'),
+              pw.Text('Spielsterne: ${payload.gameStars}'),
+              pw.Text('Abzeichen: ${payload.gameBadges}'),
+              pw.Text('Tagesquest: ${payload.questProgress}/5'),
               pw.SizedBox(height: 12),
               pw.Text('Naechste Empfehlung:'),
               pw.Text(_nextRecommendation(payload)),

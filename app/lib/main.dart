@@ -57,6 +57,9 @@ class _MainShellState extends State<MainShell> {
   int _struggleStreak = 0;
   bool _adaptiveAssistHint = false;
   List<String> _recentEvents = const [];
+  int _gameStars = 0;
+  int _gameBadges = 0;
+  int _questProgress = 0;
   DateTime? _lastUpdatedAt;
 
   static const List<({String label, IconData icon})> _tabs = [
@@ -149,12 +152,23 @@ class _MainShellState extends State<MainShell> {
           currentStepLabel: currentStepLabel,
           completedLoops: _completedLoops,
           recommendationText: _learningRecommendation,
+          gameStars: _gameStars,
+          gameBadges: _gameBadges,
+          questProgress: _questProgress,
           onStartLearning: _goToExercise,
         );
       case 1:
-        return const SpeakingScreen();
+        return SpeakingScreen(
+          globalStars: _gameStars,
+          globalBadges: _gameBadges,
+          onAttemptRated: _handleSpeakingAttempt,
+        );
       case 2:
-        return const ListeningScreen();
+        return ListeningScreen(
+          globalStars: _gameStars,
+          globalBadges: _gameBadges,
+          onRoundSolved: _handleListeningRound,
+        );
       case 3:
         return ExercisesScreen(
           template: _activeTemplate,
@@ -176,6 +190,9 @@ class _MainShellState extends State<MainShell> {
           struggleStreak: _struggleStreak,
           recommendationText: _learningRecommendation,
           recentEvents: _recentEvents.reversed.toList(),
+          gameStars: _gameStars,
+          gameBadges: _gameBadges,
+          questProgress: _questProgress,
         );
       default:
         return ParentModeScreen(
@@ -249,6 +266,9 @@ class _MainShellState extends State<MainShell> {
       _struggleStreak = snapshot.struggleStreak;
       _adaptiveAssistHint = snapshot.adaptiveAssistHint;
       _recentEvents = snapshot.recentEvents;
+      _gameStars = snapshot.gameStars;
+      _gameBadges = snapshot.gameBadges;
+      _questProgress = snapshot.questProgress;
       _lastUpdatedAt = snapshot.lastUpdatedAt;
       _isLoading = false;
     });
@@ -267,6 +287,7 @@ class _MainShellState extends State<MainShell> {
       _struggleStreak = 0;
       _adaptiveAssistHint = false;
       _recordEvent('Geschafft');
+      _grantGameReward(stars: 1);
 
       if (_successStreak >= 2) {
         _successStreak = 0;
@@ -361,6 +382,9 @@ class _MainShellState extends State<MainShell> {
       successStreak: _successStreak,
       struggleStreak: _struggleStreak,
       recentEvents: _recentEvents.reversed.take(10).toList(),
+      gameStars: _gameStars,
+      gameBadges: _gameBadges,
+      questProgress: _questProgress,
       generatedAt: now,
     );
   }
@@ -379,6 +403,9 @@ class _MainShellState extends State<MainShell> {
       struggleStreak: _struggleStreak,
       adaptiveAssistHint: _adaptiveAssistHint,
       recentEvents: _recentEvents,
+      gameStars: _gameStars,
+      gameBadges: _gameBadges,
+      questProgress: _questProgress,
       lastUpdatedAt: now,
     );
 
@@ -414,6 +441,36 @@ class _MainShellState extends State<MainShell> {
       _recentEvents = const [];
     });
     _saveState();
+  }
+
+  void _handleListeningRound(bool solved) {
+    setState(() {
+      _recordEvent(solved ? 'Hoer-Spiel richtig' : 'Hoer-Spiel falsch');
+      if (solved) {
+        _grantGameReward(stars: 2);
+      }
+    });
+    _saveState();
+  }
+
+  void _handleSpeakingAttempt(bool good) {
+    setState(() {
+      _recordEvent(good ? 'Sprech-Spiel gelungen' : 'Sprech-Spiel nochmal');
+      if (good) {
+        _grantGameReward(stars: 2);
+      }
+    });
+    _saveState();
+  }
+
+  void _grantGameReward({required int stars}) {
+    _gameStars += stars;
+    _questProgress++;
+    if (_questProgress >= 5) {
+      _questProgress = 0;
+      _gameBadges++;
+      _recordEvent('Tagesquest geschafft');
+    }
   }
 
   void _recordEvent(String type) {

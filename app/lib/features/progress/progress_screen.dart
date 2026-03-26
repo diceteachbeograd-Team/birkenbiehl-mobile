@@ -10,6 +10,9 @@ class ProgressScreen extends StatelessWidget {
     required this.struggleStreak,
     required this.recommendationText,
     required this.recentEvents,
+    required this.gameStars,
+    required this.gameBadges,
+    required this.questProgress,
   });
 
   final int completedLoops;
@@ -19,6 +22,9 @@ class ProgressScreen extends StatelessWidget {
   final int struggleStreak;
   final String recommendationText;
   final List<String> recentEvents;
+  final int gameStars;
+  final int gameBadges;
+  final int questProgress;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +36,9 @@ class ProgressScreen extends StatelessWidget {
         Text('Aktueller Schritt: $currentStepLabel'),
         const SizedBox(height: 8),
         Text('Abgeschlossene Loops: $completedLoops'),
+        Text('Spielsterne: $gameStars'),
+        Text('Abzeichen: $gameBadges'),
+        Text('Quest-Fortschritt: $questProgress/5'),
         Text('Erfolgsserie: $successStreak'),
         Text('Hilfeserie: $struggleStreak'),
         const SizedBox(height: 12),

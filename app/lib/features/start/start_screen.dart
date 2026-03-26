@@ -9,6 +9,9 @@ class StartScreen extends StatelessWidget {
     required this.currentStepLabel,
     required this.completedLoops,
     required this.recommendationText,
+    required this.gameStars,
+    required this.gameBadges,
+    required this.questProgress,
     required this.onStartLearning,
   });
 
@@ -16,6 +19,9 @@ class StartScreen extends StatelessWidget {
   final String currentStepLabel;
   final int completedLoops;
   final String recommendationText;
+  final int gameStars;
+  final int gameBadges;
+  final int questProgress;
   final VoidCallback onStartLearning;
 
   @override
@@ -48,6 +54,8 @@ class StartScreen extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text('Abgeschlossene Loops: $completedLoops'),
+        Text('Spielsterne: $gameStars | Abzeichen: $gameBadges'),
+        Text('Tagesquest: $questProgress/5'),
         Text('Hilfen aktiv: $activeHelpText'),
         const SizedBox(height: 8),
         Card(
