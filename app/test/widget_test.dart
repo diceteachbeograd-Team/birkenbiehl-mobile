@@ -11,20 +11,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:app/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Main shell renders and allows navigation', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const BirkenbiehlApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('Birkenbiehl Mobile'), findsOneWidget);
+    expect(find.text('Start'), findsAtLeastNWidgets(1));
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    await tester.tap(find.text('Sprechen'));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Nächste Mini-Aufgabe'), findsOneWidget);
+    expect(find.byKey(const Key('hearingAssistToggle')), findsOneWidget);
+    expect(find.byKey(const Key('visionAssistToggle')), findsOneWidget);
   });
 }

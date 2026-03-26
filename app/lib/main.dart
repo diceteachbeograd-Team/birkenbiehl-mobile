@@ -1,122 +1,129 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const BirkenbiehlApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class BirkenbiehlApp extends StatelessWidget {
+  const BirkenbiehlApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Birkenbiehl Mobile',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1E8A5A)),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MainShell(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class MainShell extends StatefulWidget {
+  const MainShell({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MainShell> createState() => _MainShellState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _MainShellState extends State<MainShell> {
+  int _currentIndex = 0;
+  bool _hearingAssist = false;
+  bool _visionAssist = false;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  static const List<({String label, IconData icon})> _tabs = [
+    (label: 'Start', icon: Icons.home_rounded),
+    (label: 'Sprechen', icon: Icons.mic_rounded),
+    (label: 'Hören', icon: Icons.volume_up_rounded),
+    (label: 'Üben', icon: Icons.extension_rounded),
+    (label: 'Verlauf', icon: Icons.menu_book_rounded),
+    (label: 'Export', icon: Icons.ios_share_rounded),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    final current = _tabs[_currentIndex];
+
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: const Text('Birkenbiehl Mobile'),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: Padding(
+        padding: const EdgeInsets.all(16),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text('You have pushed the button this many times:'),
             Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+              current.label,
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              _hintForTab(_currentIndex),
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            const SizedBox(height: 20),
+            Card(
+              child: ListTile(
+                leading: Icon(current.icon),
+                title: const Text('Nächste Mini-Aufgabe'),
+                subtitle: Text(_taskForTab(_currentIndex)),
+              ),
+            ),
+            const SizedBox(height: 12),
+            SwitchListTile(
+              key: const Key('hearingAssistToggle'),
+              title: const Text('Hörhilfe'),
+              subtitle: const Text('Untertitel und visuelle Hinweise'),
+              value: _hearingAssist,
+              onChanged: (v) => setState(() => _hearingAssist = v),
+            ),
+            SwitchListTile(
+              key: const Key('visionAssistToggle'),
+              title: const Text('Sehhilfe'),
+              subtitle: const Text('Audioführung und hoher Kontrast'),
+              value: _visionAssist,
+              onChanged: (v) => setState(() => _visionAssist = v),
+            ),
+            const Spacer(),
+            Text(
+              'B1-Pfad: Dekodieren -> Hören -> Antworten',
+              style: Theme.of(context).textTheme.titleMedium,
+              textAlign: TextAlign.center,
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _currentIndex,
+        onDestinationSelected: (index) => setState(() => _currentIndex = index),
+        destinations: _tabs
+            .map(
+              (tab) => NavigationDestination(
+                icon: Icon(tab.icon),
+                label: tab.label,
+              ),
+            )
+            .toList(),
       ),
     );
   }
+
+  String _hintForTab(int tab) => switch (tab) {
+        0 => 'Lerninsel mit Tageszielen und schnellem Einstieg.',
+        1 => 'Kurz sprechen, lokal erkennen, dann Antwort üben.',
+        2 => 'Passiv hören und Muster wiederholen.',
+        3 => 'Dynamische Übungen passend zum Profil.',
+        4 => 'Fortschritt und wiederholbare Muster.',
+        _ => 'Gespräch als Markdown oder PDF teilen.',
+      };
+
+  String _taskForTab(int tab) => switch (tab) {
+        0 => '3 kurze Sprechmuster starten',
+        1 => '1 Antwort laut nachsprechen',
+        2 => '1 Audio-Loop mit Wiederholung',
+        3 => '1 Mini-Dialog fertigstellen',
+        4 => 'Fehler von gestern erneut üben',
+        _ => 'Letzte Session als .md exportieren',
+      };
 }
