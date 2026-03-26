@@ -70,6 +70,8 @@ void main() {
     );
     expect(find.byKey(const Key('exportMarkdownButton')), findsOneWidget);
     expect(find.byKey(const Key('exportPdfButton')), findsOneWidget);
+    expect(find.byKey(const Key('templateSelectorDropdown')), findsOneWidget);
+    expect(find.byKey(const Key('clearHistoryButton')), findsOneWidget);
   });
 
   testWidgets('Start CTA opens exercise tab', (WidgetTester tester) async {

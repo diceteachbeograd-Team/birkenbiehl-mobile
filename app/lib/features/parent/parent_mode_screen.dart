@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 
+class ParentTemplateOption {
+  const ParentTemplateOption({required this.id, required this.title});
+
+  final String id;
+  final String title;
+}
+
 class ParentModeScreen extends StatefulWidget {
   const ParentModeScreen({
     super.key,
@@ -9,6 +16,10 @@ class ParentModeScreen extends StatefulWidget {
     required this.hearingAssist,
     required this.visionAssist,
     required this.lastUpdatedLabel,
+    required this.templates,
+    required this.selectedTemplateId,
+    required this.onTemplateChanged,
+    required this.onClearHistory,
     required this.onExportMarkdown,
     required this.onExportPdf,
   });
@@ -19,6 +30,10 @@ class ParentModeScreen extends StatefulWidget {
   final bool hearingAssist;
   final bool visionAssist;
   final String lastUpdatedLabel;
+  final List<ParentTemplateOption> templates;
+  final String selectedTemplateId;
+  final ValueChanged<String> onTemplateChanged;
+  final VoidCallback onClearHistory;
   final Future<String> Function() onExportMarkdown;
   final Future<String> Function() onExportPdf;
 
@@ -62,6 +77,48 @@ class _ParentModeScreenState extends State<ParentModeScreen> {
             title: const Text('Assistenzstatus'),
             subtitle: Text(
               'Hoerhilfe: ${widget.hearingAssist ? 'An' : 'Aus'} | Sehhilfe: ${widget.visionAssist ? 'An' : 'Aus'}',
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text('Lernpfad steuern'),
+                const SizedBox(height: 8),
+                DropdownButtonFormField<String>(
+                  key: const Key('templateSelectorDropdown'),
+                  initialValue: widget.selectedTemplateId,
+                  decoration: const InputDecoration(
+                    labelText: 'Thema auswaehlen',
+                    border: OutlineInputBorder(),
+                  ),
+                  items: widget.templates
+                      .map(
+                        (template) => DropdownMenuItem<String>(
+                          value: template.id,
+                          child: Text(template.title),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    if (value == null) {
+                      return;
+                    }
+                    widget.onTemplateChanged(value);
+                  },
+                ),
+                const SizedBox(height: 8),
+                OutlinedButton.icon(
+                  key: const Key('clearHistoryButton'),
+                  onPressed: widget.onClearHistory,
+                  icon: const Icon(Icons.delete_sweep_rounded),
+                  label: const Text('Lernhistorie leeren'),
+                ),
+              ],
             ),
           ),
         ),

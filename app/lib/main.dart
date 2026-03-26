@@ -185,6 +185,17 @@ class _MainShellState extends State<MainShell> {
           hearingAssist: _profile.hearingAssist,
           visionAssist: _profile.visionAssist,
           lastUpdatedLabel: _lastUpdatedLabel,
+          templates: kA1Templates
+              .map(
+                (template) => ParentTemplateOption(
+                  id: template.id,
+                  title: template.title,
+                ),
+              )
+              .toList(),
+          selectedTemplateId: _activeTemplate.id,
+          onTemplateChanged: _setActiveTemplate,
+          onClearHistory: _clearHistory,
           onExportMarkdown: _exportMarkdown,
           onExportPdf: _exportPdf,
         );
@@ -383,6 +394,26 @@ class _MainShellState extends State<MainShell> {
     setState(() {
       _currentIndex = 3;
     });
+  }
+
+  void _setActiveTemplate(String templateId) {
+    final selected = _templateById(templateId);
+    setState(() {
+      _activeTemplate = selected;
+      _currentLearningStepIndex = 0;
+      _successStreak = 0;
+      _struggleStreak = 0;
+      _adaptiveAssistHint = false;
+      _recordEvent('Template-gewechselt');
+    });
+    _saveState();
+  }
+
+  void _clearHistory() {
+    setState(() {
+      _recentEvents = const [];
+    });
+    _saveState();
   }
 
   void _recordEvent(String type) {
