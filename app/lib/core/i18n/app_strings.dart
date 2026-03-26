@@ -1,5 +1,6 @@
 class AppStrings {
   const AppStrings({
+    required this.languageCode,
     required this.appTitle,
     required this.tabStart,
     required this.tabSpeaking,
@@ -68,8 +69,12 @@ class AppStrings {
     required this.progressSaved,
     required this.progressRecentActions,
     required this.progressNoActions,
+    required this.recommendationSlow,
+    required this.recommendationFast,
+    required this.recommendationDefault,
   });
 
+  final String languageCode;
   final String appTitle;
   final String tabStart;
   final String tabSpeaking;
@@ -146,6 +151,9 @@ class AppStrings {
   final String progressSaved;
   final String progressRecentActions;
   final String progressNoActions;
+  final String recommendationSlow;
+  final String recommendationFast;
+  final String recommendationDefault;
 
   static const supportedCodes = ['de', 'en', 'es'];
 
@@ -169,6 +177,7 @@ class AppStrings {
     switch (normalizeCode(code)) {
       case 'de':
         return const AppStrings(
+          languageCode: 'de',
           appTitle: 'Birkenbiehl Mobile',
           tabStart: 'Start',
           tabSpeaking: 'Sprechen',
@@ -240,9 +249,15 @@ class AppStrings {
           progressSaved: 'Fortschritt wird lokal gespeichert',
           progressRecentActions: 'Letzte Lernaktionen',
           progressNoActions: 'Noch keine Lernaktionen gespeichert',
+          recommendationSlow:
+              'Langsamer bleiben: erst Wort knacken und hoeren wiederholen.',
+          recommendationFast:
+              'Guter Lauf: einen Schritt weiter und dann Alltag nutzen testen.',
+          recommendationDefault: 'Kurze Hoerphase starten und danach bewerten.',
         );
       case 'es':
         return const AppStrings(
+          languageCode: 'es',
           appTitle: 'Birkenbiehl Mobile',
           tabStart: 'Inicio',
           tabSpeaking: 'Hablar',
@@ -311,9 +326,16 @@ class AppStrings {
           progressSaved: 'El progreso se guarda localmente',
           progressRecentActions: 'Ultimas acciones',
           progressNoActions: 'Aun no hay acciones guardadas',
+          recommendationSlow:
+              'Ve mas despacio: repite entender palabras y escuchar.',
+          recommendationFast:
+              'Buen ritmo: avanza y prueba usarlo en la vida diaria.',
+          recommendationDefault:
+              'Empieza con escuchar y luego evalua la respuesta.',
         );
       default:
         return const AppStrings(
+          languageCode: 'en',
           appTitle: 'Birkenbiehl Mobile',
           tabStart: 'Start',
           tabSpeaking: 'Speak',
@@ -382,6 +404,11 @@ class AppStrings {
           progressSaved: 'Progress is stored locally',
           progressRecentActions: 'Recent learning actions',
           progressNoActions: 'No learning actions saved yet',
+          recommendationSlow:
+              'Go slower: repeat word understanding and listening.',
+          recommendationFast: 'Great run: move forward and test real-life use.',
+          recommendationDefault:
+              'Start with a short listening phase, then rate your response.',
         );
     }
   }

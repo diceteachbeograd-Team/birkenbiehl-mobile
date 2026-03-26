@@ -114,8 +114,8 @@ class _MainShellState extends State<MainShell> {
       );
     }
 
-    final currentStepLabel =
-        _activeTemplate.steps[_currentLearningStepIndex].label;
+    final currentStepLabel = _activeTemplate.steps[_currentLearningStepIndex]
+        .labelFor(strings.languageCode);
 
     return Scaffold(
       appBar: AppBar(title: Text(strings.appTitle)),
@@ -184,7 +184,7 @@ class _MainShellState extends State<MainShell> {
           profile: _profile,
           currentStepLabel: currentStepLabel,
           completedLoops: _completedLoops,
-          recommendationText: _learningRecommendation,
+          recommendationText: _learningRecommendation(strings),
           gameStars: _gameStars,
           gameBadges: _gameBadges,
           questProgress: _questProgress,
@@ -225,7 +225,7 @@ class _MainShellState extends State<MainShell> {
           currentStepLabel: currentStepLabel,
           successStreak: _successStreak,
           struggleStreak: _struggleStreak,
-          recommendationText: _learningRecommendation,
+          recommendationText: _learningRecommendation(strings),
           recentEvents: _recentEvents.reversed.toList(),
           gameStars: _gameStars,
           gameBadges: _gameBadges,
@@ -273,14 +273,14 @@ class _MainShellState extends State<MainShell> {
     return '$dd.$mm.$yy $hh:$min';
   }
 
-  String get _learningRecommendation {
+  String _learningRecommendation(AppStrings strings) {
     if (_adaptiveAssistHint || _struggleStreak >= 1) {
-      return 'Langsamer bleiben: erst Dekodieren und Hoeren wiederholen.';
+      return strings.recommendationSlow;
     }
     if (_successStreak >= 1) {
-      return 'Guter Lauf: einen Schritt weiter und dann direkt Transfer testen.';
+      return strings.recommendationFast;
     }
-    return 'Kurze Hoerphase starten und danach mit Geschafft/Schwer bewerten.';
+    return strings.recommendationDefault;
   }
 
   Future<void> _loadState() async {
@@ -423,7 +423,8 @@ class _MainShellState extends State<MainShell> {
   ExportPayload _payload(DateTime now) {
     return ExportPayload(
       templateTitle: _activeTemplate.title,
-      currentStepLabel: _activeTemplate.steps[_currentLearningStepIndex].label,
+      currentStepLabel: _activeTemplate.steps[_currentLearningStepIndex]
+          .labelFor(_uiLanguageCode),
       completedLoops: _completedLoops,
       hearingAssist: _profile.hearingAssist,
       visionAssist: _profile.visionAssist,
@@ -569,7 +570,9 @@ class _MainShellState extends State<MainShell> {
     final now = DateTime.now().toLocal();
     final hh = now.hour.toString().padLeft(2, '0');
     final min = now.minute.toString().padLeft(2, '0');
-    final step = _activeTemplate.steps[_currentLearningStepIndex].label;
+    final step = _activeTemplate.steps[_currentLearningStepIndex].labelFor(
+      _uiLanguageCode,
+    );
     final event = '$hh:$min | $type | ${_activeTemplate.title} | $step';
     final next = [..._recentEvents, event];
     const maxEvents = 40;

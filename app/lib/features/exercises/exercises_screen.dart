@@ -47,9 +47,11 @@ class ExercisesScreen extends StatelessWidget {
         const SizedBox(height: 8),
         Text(template.prompt),
         const SizedBox(height: 12),
-        Text('${strings.exerciseNow}: ${currentStep.label}'),
+        Text(
+          '${strings.exerciseNow}: ${currentStep.labelFor(strings.languageCode)}',
+        ),
         const SizedBox(height: 6),
-        Text(currentStep.hint),
+        Text(currentStep.hintFor(strings.languageCode)),
         const SizedBox(height: 6),
         LinearProgressIndicator(value: progress),
         const SizedBox(height: 8),
@@ -73,12 +75,13 @@ class ExercisesScreen extends StatelessWidget {
               children: [
                 for (var i = 0; i < steps.length; i++)
                   Semantics(
-                    label: 'Lernschritt ${i + 1}: ${steps[i].label}',
+                    label:
+                        'Lernschritt ${i + 1}: ${steps[i].labelFor(strings.languageCode)}',
                     child: Chip(
                       backgroundColor: i == currentStepIndex
                           ? Theme.of(context).colorScheme.primaryContainer
                           : null,
-                      label: Text(steps[i].label),
+                      label: Text(steps[i].labelFor(strings.languageCode)),
                     ),
                   ),
               ],

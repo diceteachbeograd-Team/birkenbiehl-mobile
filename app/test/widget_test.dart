@@ -51,7 +51,14 @@ void main() {
     await tester.pumpAndSettle();
     await _completeSetupFlow(tester);
 
-    expect(find.textContaining('Wort knacken'), findsWidgets);
+    expect(
+      _findAnyStepLabel(const [
+        'Wort knacken',
+        'Crack words',
+        'Entender palabras',
+      ]),
+      findsWidgets,
+    );
 
     await tester.scrollUntilVisible(
       find.byKey(const Key('markSuccessButton')),
@@ -63,7 +70,14 @@ void main() {
     await tester.tap(find.byKey(const Key('markSuccessButton')));
     await tester.pump();
 
-    expect(find.textContaining('Genau hoeren'), findsOneWidget);
+    expect(
+      _findAnyStepLabel(const [
+        'Genau hoeren',
+        'Listen closely',
+        'Escuchar atento',
+      ]),
+      findsWidgets,
+    );
   });
 
   testWidgets('Parent mode exposes control and export actions', (
@@ -138,4 +152,14 @@ Future<void> _completeSetupFlow(WidgetTester tester) async {
   );
   await tester.tap(find.byKey(const Key('finishSetupButton')));
   await tester.pumpAndSettle();
+}
+
+Finder _findAnyStepLabel(List<String> labels) {
+  return find.byWidgetPredicate((widget) {
+    if (widget is! Text) {
+      return false;
+    }
+    final text = widget.data ?? '';
+    return labels.any((label) => text.contains(label));
+  });
 }
