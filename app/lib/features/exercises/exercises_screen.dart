@@ -35,13 +35,15 @@ class ExercisesScreen extends StatelessWidget {
 
     return ListView(
       children: [
-        Text('Uebung', style: Theme.of(context).textTheme.headlineSmall),
+        Text('Lernspiel', style: Theme.of(context).textTheme.headlineSmall),
         const SizedBox(height: 8),
         Text('${template.level}: ${template.title}'),
         const SizedBox(height: 8),
         Text(template.prompt),
         const SizedBox(height: 12),
-        Text('Aktueller Schritt: ${currentStep.label}'),
+        Text('Jetzt: ${currentStep.label}'),
+        const SizedBox(height: 6),
+        Text(currentStep.hint),
         const SizedBox(height: 6),
         LinearProgressIndicator(value: progress),
         const SizedBox(height: 8),

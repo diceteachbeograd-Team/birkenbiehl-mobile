@@ -16,6 +16,9 @@ class ExportPayload {
     required this.gameStars,
     required this.gameBadges,
     required this.questProgress,
+    required this.selectedLanguage,
+    required this.selectedLevel,
+    required this.selectedContext,
     required this.generatedAt,
   });
 
@@ -30,6 +33,9 @@ class ExportPayload {
   final int gameStars;
   final int gameBadges;
   final int questProgress;
+  final String? selectedLanguage;
+  final String? selectedLevel;
+  final String? selectedContext;
   final DateTime generatedAt;
 }
 
@@ -46,6 +52,9 @@ class ExportService {
       ..writeln('- Zeitpunkt: ${payload.generatedAt.toIso8601String()}')
       ..writeln('- Aktuelle Uebung: ${payload.templateTitle}')
       ..writeln('- Aktueller Schritt: ${payload.currentStepLabel}')
+      ..writeln('- Sprache: ${payload.selectedLanguage ?? 'n/a'}')
+      ..writeln('- Lernstufe: ${payload.selectedLevel ?? 'n/a'}')
+      ..writeln('- Thema: ${payload.selectedContext ?? 'n/a'}')
       ..writeln('- Abgeschlossene Loops: ${payload.completedLoops}')
       ..writeln(
         '- Hilfen aktiv: ${_assistiveLabel(payload.hearingAssist, payload.visionAssist)}',
@@ -94,6 +103,9 @@ class ExportService {
               pw.Text('Zeitpunkt: ${payload.generatedAt.toIso8601String()}'),
               pw.Text('Aktuelle Uebung: ${payload.templateTitle}'),
               pw.Text('Aktueller Schritt: ${payload.currentStepLabel}'),
+              pw.Text('Sprache: ${payload.selectedLanguage ?? 'n/a'}'),
+              pw.Text('Lernstufe: ${payload.selectedLevel ?? 'n/a'}'),
+              pw.Text('Thema: ${payload.selectedContext ?? 'n/a'}'),
               pw.Text('Abgeschlossene Loops: ${payload.completedLoops}'),
               pw.Text(
                 'Hilfen aktiv: ${_assistiveLabel(payload.hearingAssist, payload.visionAssist)}',

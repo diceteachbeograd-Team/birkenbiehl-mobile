@@ -14,6 +14,10 @@ class LearningAppStateSnapshot {
     required this.gameStars,
     required this.gameBadges,
     required this.questProgress,
+    required this.setupCompleted,
+    required this.selectedLanguage,
+    required this.selectedLevel,
+    required this.selectedContext,
     required this.lastUpdatedAt,
   });
 
@@ -29,6 +33,10 @@ class LearningAppStateSnapshot {
   final int gameStars;
   final int gameBadges;
   final int questProgress;
+  final bool setupCompleted;
+  final String? selectedLanguage;
+  final String? selectedLevel;
+  final String? selectedContext;
   final DateTime? lastUpdatedAt;
 
   factory LearningAppStateSnapshot.initial(String templateId) {
@@ -45,6 +53,10 @@ class LearningAppStateSnapshot {
       gameStars: 0,
       gameBadges: 0,
       questProgress: 0,
+      setupCompleted: false,
+      selectedLanguage: null,
+      selectedLevel: null,
+      selectedContext: null,
       lastUpdatedAt: null,
     );
   }
@@ -63,6 +75,10 @@ class LocalProgressStore {
   static const _keyGameStars = 'game_stars';
   static const _keyGameBadges = 'game_badges';
   static const _keyQuestProgress = 'quest_progress';
+  static const _keySetupCompleted = 'setup_completed';
+  static const _keySelectedLanguage = 'selected_language';
+  static const _keySelectedLevel = 'selected_level';
+  static const _keySelectedContext = 'selected_context';
   static const _keyLastUpdatedAt = 'last_updated_at';
 
   Future<LearningAppStateSnapshot> load(String defaultTemplateId) async {
@@ -81,6 +97,10 @@ class LocalProgressStore {
       gameStars: prefs.getInt(_keyGameStars) ?? 0,
       gameBadges: prefs.getInt(_keyGameBadges) ?? 0,
       questProgress: prefs.getInt(_keyQuestProgress) ?? 0,
+      setupCompleted: prefs.getBool(_keySetupCompleted) ?? false,
+      selectedLanguage: prefs.getString(_keySelectedLanguage),
+      selectedLevel: prefs.getString(_keySelectedLevel),
+      selectedContext: prefs.getString(_keySelectedContext),
       lastUpdatedAt: DateTime.tryParse(
         prefs.getString(_keyLastUpdatedAt) ?? '',
       ),
@@ -102,6 +122,23 @@ class LocalProgressStore {
     await prefs.setInt(_keyGameStars, snapshot.gameStars);
     await prefs.setInt(_keyGameBadges, snapshot.gameBadges);
     await prefs.setInt(_keyQuestProgress, snapshot.questProgress);
+    await prefs.setBool(_keySetupCompleted, snapshot.setupCompleted);
+
+    if (snapshot.selectedLanguage != null) {
+      await prefs.setString(_keySelectedLanguage, snapshot.selectedLanguage!);
+    } else {
+      await prefs.remove(_keySelectedLanguage);
+    }
+    if (snapshot.selectedLevel != null) {
+      await prefs.setString(_keySelectedLevel, snapshot.selectedLevel!);
+    } else {
+      await prefs.remove(_keySelectedLevel);
+    }
+    if (snapshot.selectedContext != null) {
+      await prefs.setString(_keySelectedContext, snapshot.selectedContext!);
+    } else {
+      await prefs.remove(_keySelectedContext);
+    }
 
     if (snapshot.lastUpdatedAt != null) {
       await prefs.setString(

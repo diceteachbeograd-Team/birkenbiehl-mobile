@@ -7,6 +7,7 @@ import 'features/learning/models/learning_step.dart';
 import 'features/listening/listening_screen.dart';
 import 'features/parent/parent_mode_screen.dart';
 import 'features/progress/progress_screen.dart';
+import 'features/setup/setup_flow_screen.dart';
 import 'features/speaking/speaking_screen.dart';
 import 'features/start/start_screen.dart';
 import 'shared/export_service.dart';
@@ -44,6 +45,10 @@ class _MainShellState extends State<MainShell> {
 
   int _currentIndex = 0;
   bool _isLoading = true;
+  bool _setupCompleted = false;
+  String? _selectedLanguage;
+  String? _selectedLevel;
+  String? _selectedContext;
 
   AssistiveProfile _profile = const AssistiveProfile(
     hearingAssist: false,
@@ -79,55 +84,76 @@ class _MainShellState extends State<MainShell> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Birkenbiehl Mobile')),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (!_setupCompleted) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Birkenbiehl Mobile')),
+        body: SetupFlowScreen(
+          selectedLanguage: _selectedLanguage,
+          selectedLevel: _selectedLevel,
+          selectedContext: _selectedContext,
+          onLanguageChanged: (value) =>
+              setState(() => _selectedLanguage = value),
+          onLevelChanged: (value) => setState(() => _selectedLevel = value),
+          onContextChanged: (value) => setState(() => _selectedContext = value),
+          onFinish: _finishSetup,
+        ),
+      );
+    }
+
     final currentStepLabel =
         _activeTemplate.steps[_currentLearningStepIndex].label;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Birkenbiehl Mobile')),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(child: _buildScreen(currentStepLabel)),
-                  const SizedBox(height: 8),
-                  Semantics(
-                    label: 'Hoerhilfe umschalten',
-                    toggled: _profile.hearingAssist,
-                    child: SwitchListTile(
-                      key: const Key('hearingAssistToggle'),
-                      title: const Text('Hoerhilfe'),
-                      subtitle: const Text('Untertitel und visuelle Hinweise'),
-                      value: _profile.hearingAssist,
-                      onChanged: (v) {
-                        setState(() {
-                          _profile = _profile.copyWith(hearingAssist: v);
-                        });
-                        _saveState();
-                      },
-                    ),
-                  ),
-                  Semantics(
-                    label: 'Sehhilfe umschalten',
-                    toggled: _profile.visionAssist,
-                    child: SwitchListTile(
-                      key: const Key('visionAssistToggle'),
-                      title: const Text('Sehhilfe'),
-                      subtitle: const Text('Audiofuehrung und hoher Kontrast'),
-                      value: _profile.visionAssist,
-                      onChanged: (v) {
-                        setState(() {
-                          _profile = _profile.copyWith(visionAssist: v);
-                        });
-                        _saveState();
-                      },
-                    ),
-                  ),
-                ],
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(child: _buildScreen(currentStepLabel)),
+            const SizedBox(height: 8),
+            Semantics(
+              label: 'Hoerhilfe umschalten',
+              toggled: _profile.hearingAssist,
+              child: SwitchListTile(
+                key: const Key('hearingAssistToggle'),
+                title: const Text('Hoerhilfe'),
+                subtitle: const Text('Untertitel und visuelle Hinweise'),
+                value: _profile.hearingAssist,
+                onChanged: (v) {
+                  setState(() {
+                    _profile = _profile.copyWith(hearingAssist: v);
+                  });
+                  _saveState();
+                },
               ),
             ),
+            Semantics(
+              label: 'Sehhilfe umschalten',
+              toggled: _profile.visionAssist,
+              child: SwitchListTile(
+                key: const Key('visionAssistToggle'),
+                title: const Text('Sehhilfe'),
+                subtitle: const Text('Audiofuehrung und hoher Kontrast'),
+                value: _profile.visionAssist,
+                onChanged: (v) {
+                  setState(() {
+                    _profile = _profile.copyWith(visionAssist: v);
+                  });
+                  _saveState();
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
@@ -269,6 +295,10 @@ class _MainShellState extends State<MainShell> {
       _gameStars = snapshot.gameStars;
       _gameBadges = snapshot.gameBadges;
       _questProgress = snapshot.questProgress;
+      _setupCompleted = snapshot.setupCompleted;
+      _selectedLanguage = snapshot.selectedLanguage;
+      _selectedLevel = snapshot.selectedLevel;
+      _selectedContext = snapshot.selectedContext;
       _lastUpdatedAt = snapshot.lastUpdatedAt;
       _isLoading = false;
     });
@@ -385,6 +415,9 @@ class _MainShellState extends State<MainShell> {
       gameStars: _gameStars,
       gameBadges: _gameBadges,
       questProgress: _questProgress,
+      selectedLanguage: _selectedLanguage,
+      selectedLevel: _selectedLevel,
+      selectedContext: _selectedContext,
       generatedAt: now,
     );
   }
@@ -406,6 +439,10 @@ class _MainShellState extends State<MainShell> {
       gameStars: _gameStars,
       gameBadges: _gameBadges,
       questProgress: _questProgress,
+      setupCompleted: _setupCompleted,
+      selectedLanguage: _selectedLanguage,
+      selectedLevel: _selectedLevel,
+      selectedContext: _selectedContext,
       lastUpdatedAt: now,
     );
 
@@ -418,9 +455,37 @@ class _MainShellState extends State<MainShell> {
   }
 
   void _goToExercise() {
+    if (!_setupCompleted) {
+      return;
+    }
     setState(() {
       _currentIndex = 3;
     });
+  }
+
+  void _finishSetup() {
+    setState(() {
+      _setupCompleted = true;
+      _currentIndex = 3;
+      _activeTemplate = _selectTemplateForContext();
+      _currentLearningStepIndex = 0;
+    });
+    _recordEvent('Setup abgeschlossen');
+    _saveState();
+  }
+
+  ExerciseTemplate _selectTemplateForContext() {
+    final context = _selectedContext;
+    if (context == 'school') {
+      return _templateById('a1_school_01');
+    }
+    if (context == 'family') {
+      return _templateById('a1_family_01');
+    }
+    if (context == 'travel') {
+      return _templateById('a1_travel_01');
+    }
+    return _activeTemplate;
   }
 
   void _setActiveTemplate(String templateId) {
