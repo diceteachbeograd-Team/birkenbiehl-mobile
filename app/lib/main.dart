@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'core/models/assistive_profile.dart';
+import 'features/exercises/exercises_screen.dart';
+import 'features/listening/listening_screen.dart';
+import 'features/parent/parent_mode_screen.dart';
+import 'features/progress/progress_screen.dart';
+import 'features/speaking/speaking_screen.dart';
+import 'features/start/start_screen.dart';
+
 void main() {
   runApp(const BirkenbiehlApp());
 }
@@ -28,68 +36,52 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   int _currentIndex = 0;
-  bool _hearingAssist = false;
-  bool _visionAssist = false;
+  AssistiveProfile _profile = const AssistiveProfile(
+    hearingAssist: false,
+    visionAssist: false,
+  );
 
   static const List<({String label, IconData icon})> _tabs = [
     (label: 'Start', icon: Icons.home_rounded),
     (label: 'Sprechen', icon: Icons.mic_rounded),
-    (label: 'Hören', icon: Icons.volume_up_rounded),
-    (label: 'Üben', icon: Icons.extension_rounded),
+    (label: 'Hoeren', icon: Icons.volume_up_rounded),
+    (label: 'Uebung', icon: Icons.extension_rounded),
     (label: 'Verlauf', icon: Icons.menu_book_rounded),
-    (label: 'Export', icon: Icons.ios_share_rounded),
+    (label: 'Eltern', icon: Icons.admin_panel_settings_rounded),
   ];
 
   @override
   Widget build(BuildContext context) {
-    final current = _tabs[_currentIndex];
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Birkenbiehl Mobile'),
-      ),
+      appBar: AppBar(title: const Text('Birkenbiehl Mobile')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              current.label,
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              _hintForTab(_currentIndex),
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            const SizedBox(height: 20),
-            Card(
-              child: ListTile(
-                leading: Icon(current.icon),
-                title: const Text('Nächste Mini-Aufgabe'),
-                subtitle: Text(_taskForTab(_currentIndex)),
-              ),
-            ),
-            const SizedBox(height: 12),
+            Expanded(child: _buildScreen()),
+            const SizedBox(height: 8),
             SwitchListTile(
               key: const Key('hearingAssistToggle'),
-              title: const Text('Hörhilfe'),
+              title: const Text('Hoerhilfe'),
               subtitle: const Text('Untertitel und visuelle Hinweise'),
-              value: _hearingAssist,
-              onChanged: (v) => setState(() => _hearingAssist = v),
+              value: _profile.hearingAssist,
+              onChanged: (v) {
+                setState(() {
+                  _profile = _profile.copyWith(hearingAssist: v);
+                });
+              },
             ),
             SwitchListTile(
               key: const Key('visionAssistToggle'),
               title: const Text('Sehhilfe'),
-              subtitle: const Text('Audioführung und hoher Kontrast'),
-              value: _visionAssist,
-              onChanged: (v) => setState(() => _visionAssist = v),
-            ),
-            const Spacer(),
-            Text(
-              'B1-Pfad: Dekodieren -> Hören -> Antworten',
-              style: Theme.of(context).textTheme.titleMedium,
-              textAlign: TextAlign.center,
+              subtitle: const Text('Audiofuehrung und hoher Kontrast'),
+              value: _profile.visionAssist,
+              onChanged: (v) {
+                setState(() {
+                  _profile = _profile.copyWith(visionAssist: v);
+                });
+              },
             ),
           ],
         ),
@@ -109,21 +101,20 @@ class _MainShellState extends State<MainShell> {
     );
   }
 
-  String _hintForTab(int tab) => switch (tab) {
-        0 => 'Lerninsel mit Tageszielen und schnellem Einstieg.',
-        1 => 'Kurz sprechen, lokal erkennen, dann Antwort üben.',
-        2 => 'Passiv hören und Muster wiederholen.',
-        3 => 'Dynamische Übungen passend zum Profil.',
-        4 => 'Fortschritt und wiederholbare Muster.',
-        _ => 'Gespräch als Markdown oder PDF teilen.',
-      };
-
-  String _taskForTab(int tab) => switch (tab) {
-        0 => '3 kurze Sprechmuster starten',
-        1 => '1 Antwort laut nachsprechen',
-        2 => '1 Audio-Loop mit Wiederholung',
-        3 => '1 Mini-Dialog fertigstellen',
-        4 => 'Fehler von gestern erneut üben',
-        _ => 'Letzte Session als .md exportieren',
-      };
+  Widget _buildScreen() {
+    switch (_currentIndex) {
+      case 0:
+        return StartScreen(profile: _profile);
+      case 1:
+        return const SpeakingScreen();
+      case 2:
+        return const ListeningScreen();
+      case 3:
+        return const ExercisesScreen();
+      case 4:
+        return const ProgressScreen();
+      default:
+        return const ParentModeScreen();
+    }
+  }
 }
