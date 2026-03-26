@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
 
+import 'core/i18n/app_strings.dart';
 import 'core/models/assistive_profile.dart';
 import 'features/exercises/exercises_screen.dart';
 import 'features/learning/models/exercise_template.dart';
@@ -46,6 +48,9 @@ class _MainShellState extends State<MainShell> {
   int _currentIndex = 0;
   bool _isLoading = true;
   bool _setupCompleted = false;
+  String _uiLanguageCode = AppStrings.normalizeCode(
+    ui.PlatformDispatcher.instance.locale.languageCode,
+  );
   String? _selectedLanguage;
   String? _selectedLevel;
   String? _selectedContext;
@@ -67,15 +72,6 @@ class _MainShellState extends State<MainShell> {
   int _questProgress = 0;
   DateTime? _lastUpdatedAt;
 
-  static const List<({String label, IconData icon})> _tabs = [
-    (label: 'Start', icon: Icons.home_rounded),
-    (label: 'Sprechen', icon: Icons.mic_rounded),
-    (label: 'Hoeren', icon: Icons.volume_up_rounded),
-    (label: 'Uebung', icon: Icons.extension_rounded),
-    (label: 'Verlauf', icon: Icons.menu_book_rounded),
-    (label: 'Eltern', icon: Icons.admin_panel_settings_rounded),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -84,16 +80,26 @@ class _MainShellState extends State<MainShell> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppStrings.fromCode(_uiLanguageCode);
+    final tabs = <({String label, IconData icon})>[
+      (label: strings.tabStart, icon: Icons.home_rounded),
+      (label: strings.tabSpeaking, icon: Icons.mic_rounded),
+      (label: strings.tabListening, icon: Icons.volume_up_rounded),
+      (label: strings.tabExercise, icon: Icons.extension_rounded),
+      (label: strings.tabProgress, icon: Icons.menu_book_rounded),
+      (label: strings.tabParent, icon: Icons.admin_panel_settings_rounded),
+    ];
+
     if (_isLoading) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Birkenbiehl Mobile')),
+        appBar: AppBar(title: Text(strings.appTitle)),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     if (!_setupCompleted) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Birkenbiehl Mobile')),
+        appBar: AppBar(title: Text(strings.appTitle)),
         body: SetupFlowScreen(
           selectedLanguage: _selectedLanguage,
           selectedLevel: _selectedLevel,
@@ -103,6 +109,7 @@ class _MainShellState extends State<MainShell> {
           onLevelChanged: (value) => setState(() => _selectedLevel = value),
           onContextChanged: (value) => setState(() => _selectedContext = value),
           onFinish: _finishSetup,
+          strings: strings,
         ),
       );
     }
@@ -111,7 +118,7 @@ class _MainShellState extends State<MainShell> {
         _activeTemplate.steps[_currentLearningStepIndex].label;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Birkenbiehl Mobile')),
+      appBar: AppBar(title: Text(strings.appTitle)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -158,7 +165,7 @@ class _MainShellState extends State<MainShell> {
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
-        items: _tabs
+        items: tabs
             .map(
               (tab) => BottomNavigationBarItem(
                 icon: Icon(tab.icon),
@@ -238,6 +245,9 @@ class _MainShellState extends State<MainShell> {
               .toList(),
           selectedTemplateId: _activeTemplate.id,
           onTemplateChanged: _setActiveTemplate,
+          selectedUiLanguageCode: _uiLanguageCode,
+          onUiLanguageChanged: _setUiLanguage,
+          strings: AppStrings.fromCode(_uiLanguageCode),
           onClearHistory: _clearHistory,
           onExportMarkdown: _exportMarkdown,
           onExportPdf: _exportPdf,
@@ -295,6 +305,9 @@ class _MainShellState extends State<MainShell> {
       _gameStars = snapshot.gameStars;
       _gameBadges = snapshot.gameBadges;
       _questProgress = snapshot.questProgress;
+      if (snapshot.uiLanguageCode != null) {
+        _uiLanguageCode = AppStrings.normalizeCode(snapshot.uiLanguageCode);
+      }
       _setupCompleted = snapshot.setupCompleted;
       _selectedLanguage = snapshot.selectedLanguage;
       _selectedLevel = snapshot.selectedLevel;
@@ -418,6 +431,7 @@ class _MainShellState extends State<MainShell> {
       selectedLanguage: _selectedLanguage,
       selectedLevel: _selectedLevel,
       selectedContext: _selectedContext,
+      uiLanguageCode: _uiLanguageCode,
       generatedAt: now,
     );
   }
@@ -443,6 +457,7 @@ class _MainShellState extends State<MainShell> {
       selectedLanguage: _selectedLanguage,
       selectedLevel: _selectedLevel,
       selectedContext: _selectedContext,
+      uiLanguageCode: _uiLanguageCode,
       lastUpdatedAt: now,
     );
 
@@ -504,6 +519,13 @@ class _MainShellState extends State<MainShell> {
   void _clearHistory() {
     setState(() {
       _recentEvents = const [];
+    });
+    _saveState();
+  }
+
+  void _setUiLanguage(String code) {
+    setState(() {
+      _uiLanguageCode = AppStrings.normalizeCode(code);
     });
     _saveState();
   }

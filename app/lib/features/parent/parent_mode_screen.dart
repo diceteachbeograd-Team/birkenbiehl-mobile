@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core/i18n/app_strings.dart';
+
 class ParentTemplateOption {
   const ParentTemplateOption({required this.id, required this.title});
 
@@ -19,6 +21,9 @@ class ParentModeScreen extends StatefulWidget {
     required this.templates,
     required this.selectedTemplateId,
     required this.onTemplateChanged,
+    required this.selectedUiLanguageCode,
+    required this.onUiLanguageChanged,
+    required this.strings,
     required this.onClearHistory,
     required this.onExportMarkdown,
     required this.onExportPdf,
@@ -33,6 +38,9 @@ class ParentModeScreen extends StatefulWidget {
   final List<ParentTemplateOption> templates;
   final String selectedTemplateId;
   final ValueChanged<String> onTemplateChanged;
+  final String selectedUiLanguageCode;
+  final ValueChanged<String> onUiLanguageChanged;
+  final AppStrings strings;
   final VoidCallback onClearHistory;
   final Future<String> Function() onExportMarkdown;
   final Future<String> Function() onExportPdf;
@@ -49,9 +57,12 @@ class _ParentModeScreenState extends State<ParentModeScreen> {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        Text('Elternmodus', style: Theme.of(context).textTheme.headlineSmall),
+        Text(
+          widget.strings.parentTitle,
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         const SizedBox(height: 8),
-        const Text('Einstellungen, Lernstand und Exporte verwalten.'),
+        Text(widget.strings.parentSubtitle),
         const SizedBox(height: 12),
         Card(
           child: ListTile(
@@ -111,6 +122,37 @@ class _ParentModeScreenState extends State<ParentModeScreen> {
                     widget.onTemplateChanged(value);
                   },
                 ),
+                const SizedBox(height: 8),
+                DropdownButtonFormField<String>(
+                  key: const Key('uiLanguageSelectorDropdown'),
+                  initialValue: widget.selectedUiLanguageCode,
+                  decoration: InputDecoration(
+                    labelText: widget.strings.parentUiLanguageLabel,
+                    border: const OutlineInputBorder(),
+                  ),
+                  items: [
+                    DropdownMenuItem(
+                      value: 'de',
+                      child: Text(widget.strings.languageGerman),
+                    ),
+                    DropdownMenuItem(
+                      value: 'en',
+                      child: Text(widget.strings.languageEnglish),
+                    ),
+                    DropdownMenuItem(
+                      value: 'es',
+                      child: Text(widget.strings.languageSpanish),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    if (value == null) {
+                      return;
+                    }
+                    widget.onUiLanguageChanged(value);
+                  },
+                ),
+                const SizedBox(height: 6),
+                Text(widget.strings.parentUiLanguage),
                 const SizedBox(height: 8),
                 OutlinedButton.icon(
                   key: const Key('clearHistoryButton'),

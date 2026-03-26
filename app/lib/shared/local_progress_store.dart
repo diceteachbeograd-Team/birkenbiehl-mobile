@@ -18,6 +18,7 @@ class LearningAppStateSnapshot {
     required this.selectedLanguage,
     required this.selectedLevel,
     required this.selectedContext,
+    required this.uiLanguageCode,
     required this.lastUpdatedAt,
   });
 
@@ -37,6 +38,7 @@ class LearningAppStateSnapshot {
   final String? selectedLanguage;
   final String? selectedLevel;
   final String? selectedContext;
+  final String? uiLanguageCode;
   final DateTime? lastUpdatedAt;
 
   factory LearningAppStateSnapshot.initial(String templateId) {
@@ -57,6 +59,7 @@ class LearningAppStateSnapshot {
       selectedLanguage: null,
       selectedLevel: null,
       selectedContext: null,
+      uiLanguageCode: null,
       lastUpdatedAt: null,
     );
   }
@@ -79,6 +82,7 @@ class LocalProgressStore {
   static const _keySelectedLanguage = 'selected_language';
   static const _keySelectedLevel = 'selected_level';
   static const _keySelectedContext = 'selected_context';
+  static const _keyUiLanguageCode = 'ui_language_code';
   static const _keyLastUpdatedAt = 'last_updated_at';
 
   Future<LearningAppStateSnapshot> load(String defaultTemplateId) async {
@@ -101,6 +105,7 @@ class LocalProgressStore {
       selectedLanguage: prefs.getString(_keySelectedLanguage),
       selectedLevel: prefs.getString(_keySelectedLevel),
       selectedContext: prefs.getString(_keySelectedContext),
+      uiLanguageCode: prefs.getString(_keyUiLanguageCode),
       lastUpdatedAt: DateTime.tryParse(
         prefs.getString(_keyLastUpdatedAt) ?? '',
       ),
@@ -138,6 +143,11 @@ class LocalProgressStore {
       await prefs.setString(_keySelectedContext, snapshot.selectedContext!);
     } else {
       await prefs.remove(_keySelectedContext);
+    }
+    if (snapshot.uiLanguageCode != null) {
+      await prefs.setString(_keyUiLanguageCode, snapshot.uiLanguageCode!);
+    } else {
+      await prefs.remove(_keyUiLanguageCode);
     }
 
     if (snapshot.lastUpdatedAt != null) {

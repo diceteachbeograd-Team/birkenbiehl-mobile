@@ -19,6 +19,7 @@ class ExportPayload {
     required this.selectedLanguage,
     required this.selectedLevel,
     required this.selectedContext,
+    required this.uiLanguageCode,
     required this.generatedAt,
   });
 
@@ -36,6 +37,7 @@ class ExportPayload {
   final String? selectedLanguage;
   final String? selectedLevel;
   final String? selectedContext;
+  final String uiLanguageCode;
   final DateTime generatedAt;
 }
 
@@ -55,6 +57,7 @@ class ExportService {
       ..writeln('- Sprache: ${payload.selectedLanguage ?? 'n/a'}')
       ..writeln('- Lernstufe: ${payload.selectedLevel ?? 'n/a'}')
       ..writeln('- Thema: ${payload.selectedContext ?? 'n/a'}')
+      ..writeln('- App-Sprache: ${payload.uiLanguageCode}')
       ..writeln('- Abgeschlossene Loops: ${payload.completedLoops}')
       ..writeln(
         '- Hilfen aktiv: ${_assistiveLabel(payload.hearingAssist, payload.visionAssist)}',
@@ -106,6 +109,7 @@ class ExportService {
               pw.Text('Sprache: ${payload.selectedLanguage ?? 'n/a'}'),
               pw.Text('Lernstufe: ${payload.selectedLevel ?? 'n/a'}'),
               pw.Text('Thema: ${payload.selectedContext ?? 'n/a'}'),
+              pw.Text('App-Sprache: ${payload.uiLanguageCode}'),
               pw.Text('Abgeschlossene Loops: ${payload.completedLoops}'),
               pw.Text(
                 'Hilfen aktiv: ${_assistiveLabel(payload.hearingAssist, payload.visionAssist)}',

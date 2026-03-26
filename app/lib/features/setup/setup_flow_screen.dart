@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core/i18n/app_strings.dart';
+
 class SetupFlowScreen extends StatelessWidget {
   const SetupFlowScreen({
     super.key,
@@ -10,6 +12,7 @@ class SetupFlowScreen extends StatelessWidget {
     required this.onLevelChanged,
     required this.onContextChanged,
     required this.onFinish,
+    required this.strings,
   });
 
   final String? selectedLanguage;
@@ -19,6 +22,7 @@ class SetupFlowScreen extends StatelessWidget {
   final ValueChanged<String> onLevelChanged;
   final ValueChanged<String> onContextChanged;
   final VoidCallback onFinish;
+  final AppStrings strings;
 
   @override
   Widget build(BuildContext context) {
@@ -28,31 +32,36 @@ class SetupFlowScreen extends StatelessWidget {
         selectedContext != null;
 
     return ListView(
+      key: const Key('setupFlow'),
       padding: const EdgeInsets.all(16),
       children: [
-        Text('Lernstart', style: Theme.of(context).textTheme.headlineSmall),
+        Text(
+          strings.setupTitle,
+          key: const Key('setupTitle'),
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         const SizedBox(height: 8),
-        const Text('Wir richten dein Lernspiel in 3 kurzen Schritten ein.'),
+        Text(strings.setupSubtitle),
         const SizedBox(height: 16),
         _SetupCard(
-          title: '1. Welche Sprache lernst du?',
+          title: strings.setupStepLanguage,
           icon: Icons.public_rounded,
           children: [
             _ChoiceButton(
               key: const Key('language_en'),
-              text: 'Englisch',
+              text: strings.languageEnglish,
               selected: selectedLanguage == 'en',
               onTap: () => onLanguageChanged('en'),
             ),
             _ChoiceButton(
               key: const Key('language_de'),
-              text: 'Deutsch',
+              text: strings.languageGerman,
               selected: selectedLanguage == 'de',
               onTap: () => onLanguageChanged('de'),
             ),
             _ChoiceButton(
               key: const Key('language_es'),
-              text: 'Spanisch',
+              text: strings.languageSpanish,
               selected: selectedLanguage == 'es',
               onTap: () => onLanguageChanged('es'),
             ),
@@ -60,7 +69,7 @@ class SetupFlowScreen extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         _SetupCard(
-          title: '2. Wie startest du am besten?',
+          title: strings.setupStepLevel,
           icon: Icons.flag_rounded,
           children: [
             _ChoiceButton(
@@ -85,7 +94,7 @@ class SetupFlowScreen extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         _SetupCard(
-          title: '3. Worum willst du sprechen?',
+          title: strings.setupStepContext,
           icon: Icons.favorite_rounded,
           children: [
             _ChoiceButton(
@@ -113,7 +122,7 @@ class SetupFlowScreen extends StatelessWidget {
           key: const Key('finishSetupButton'),
           onPressed: ready ? onFinish : null,
           icon: const Icon(Icons.play_arrow_rounded),
-          label: const Text('Los gehts'),
+          label: Text(strings.setupFinish),
         ),
       ],
     );

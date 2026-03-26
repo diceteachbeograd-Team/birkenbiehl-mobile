@@ -15,10 +15,15 @@ void main() {
     await tester.pumpWidget(const BirkenbiehlApp());
     await tester.pumpAndSettle();
 
-    expect(find.text('Lernstart'), findsOneWidget);
+    expect(find.byKey(const Key('setupFlow')), findsOneWidget);
     await _completeSetupFlow(tester);
 
-    expect(find.text('Lernspiel'), findsAtLeastNWidgets(1));
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('markSuccessButton')),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.byKey(const Key('markSuccessButton')), findsOneWidget);
     expect(find.byType(BottomNavigationBar), findsOneWidget);
   });
 
@@ -31,7 +36,7 @@ void main() {
 
     expect(find.text('Birkenbiehl Mobile'), findsOneWidget);
 
-    await tester.tap(find.text('Sprechen'));
+    await tester.tap(find.byIcon(Icons.mic_rounded));
     await tester.pump();
 
     expect(find.text('Sprechen Spiel'), findsAtLeastNWidgets(1));
@@ -85,6 +90,7 @@ void main() {
     expect(find.byKey(const Key('exportMarkdownButton')), findsOneWidget);
     expect(find.byKey(const Key('exportPdfButton')), findsOneWidget);
     expect(find.byKey(const Key('templateSelectorDropdown')), findsOneWidget);
+    expect(find.byKey(const Key('uiLanguageSelectorDropdown')), findsOneWidget);
     expect(find.byKey(const Key('clearHistoryButton')), findsOneWidget);
   });
 
@@ -93,7 +99,7 @@ void main() {
     await tester.pumpAndSettle();
     await _completeSetupFlow(tester);
 
-    await tester.tap(find.text('Start'));
+    await tester.tap(find.byIcon(Icons.home_rounded));
     await tester.pumpAndSettle();
 
     await tester.scrollUntilVisible(
@@ -104,7 +110,7 @@ void main() {
     await tester.tap(find.byKey(const Key('startLearningButton')));
     await tester.pumpAndSettle();
 
-    expect(find.text('Lernspiel'), findsAtLeastNWidgets(1));
+    expect(find.byType(BottomNavigationBar), findsOneWidget);
     await tester.scrollUntilVisible(
       find.byKey(const Key('markSuccessButton')),
       200,
