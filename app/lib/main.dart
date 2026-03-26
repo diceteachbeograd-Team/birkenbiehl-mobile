@@ -147,6 +147,8 @@ class _MainShellState extends State<MainShell> {
           profile: _profile,
           currentStepLabel: currentStepLabel,
           completedLoops: _completedLoops,
+          recommendationText: _learningRecommendation,
+          onStartLearning: _goToExercise,
         );
       case 1:
         return const SpeakingScreen();
@@ -169,6 +171,9 @@ class _MainShellState extends State<MainShell> {
           completedLoops: _completedLoops,
           currentTemplateTitle: _activeTemplate.title,
           currentStepLabel: currentStepLabel,
+          successStreak: _successStreak,
+          struggleStreak: _struggleStreak,
+          recommendationText: _learningRecommendation,
         );
       default:
         return ParentModeScreen(
@@ -195,6 +200,16 @@ class _MainShellState extends State<MainShell> {
     final hh = local.hour.toString().padLeft(2, '0');
     final min = local.minute.toString().padLeft(2, '0');
     return '$dd.$mm.$yy $hh:$min';
+  }
+
+  String get _learningRecommendation {
+    if (_adaptiveAssistHint || _struggleStreak >= 1) {
+      return 'Langsamer bleiben: erst Dekodieren und Hoeren wiederholen.';
+    }
+    if (_successStreak >= 1) {
+      return 'Guter Lauf: einen Schritt weiter und dann direkt Transfer testen.';
+    }
+    return 'Kurze Hoerphase starten und danach mit Geschafft/Schwer bewerten.';
   }
 
   Future<void> _loadState() async {
@@ -270,6 +285,16 @@ class _MainShellState extends State<MainShell> {
 
     _completedLoops++;
     _currentLearningStepIndex = 0;
+    _rotateTemplateAfterCompletedLoop();
+  }
+
+  void _rotateTemplateAfterCompletedLoop() {
+    if (kA1Templates.isEmpty) {
+      return;
+    }
+    final nextIndex = _completedLoops % kA1Templates.length;
+    _activeTemplate = kA1Templates[nextIndex];
+    _adaptiveAssistHint = false;
   }
 
   void _prevLearningStep() {
@@ -341,6 +366,12 @@ class _MainShellState extends State<MainShell> {
       return;
     }
     setState(() {});
+  }
+
+  void _goToExercise() {
+    setState(() {
+      _currentIndex = 3;
+    });
   }
 }
 

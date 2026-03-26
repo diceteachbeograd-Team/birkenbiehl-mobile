@@ -71,4 +71,20 @@ void main() {
     expect(find.byKey(const Key('exportMarkdownButton')), findsOneWidget);
     expect(find.byKey(const Key('exportPdfButton')), findsOneWidget);
   });
+
+  testWidgets('Start CTA opens exercise tab', (WidgetTester tester) async {
+    await tester.pumpWidget(const BirkenbiehlApp());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('startLearningButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Uebung'), findsAtLeastNWidgets(1));
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('markSuccessButton')),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.byKey(const Key('markSuccessButton')), findsOneWidget);
+  });
 }

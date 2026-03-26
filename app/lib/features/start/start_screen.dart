@@ -8,11 +8,15 @@ class StartScreen extends StatelessWidget {
     required this.profile,
     required this.currentStepLabel,
     required this.completedLoops,
+    required this.recommendationText,
+    required this.onStartLearning,
   });
 
   final AssistiveProfile profile;
   final String currentStepLabel;
   final int completedLoops;
+  final String recommendationText;
+  final VoidCallback onStartLearning;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +32,8 @@ class StartScreen extends StatelessWidget {
           label: 'Lernstart mit naechster Aufgabe',
           button: true,
           child: FilledButton.icon(
-            onPressed: () {},
+            key: const Key('startLearningButton'),
+            onPressed: onStartLearning,
             icon: const Icon(Icons.play_arrow_rounded),
             label: const Text('Naechste Aufgabe starten'),
           ),
@@ -44,6 +49,14 @@ class StartScreen extends StatelessWidget {
         const SizedBox(height: 8),
         Text('Abgeschlossene Loops: $completedLoops'),
         Text('Hilfen aktiv: $activeHelpText'),
+        const SizedBox(height: 8),
+        Card(
+          child: ListTile(
+            leading: const Icon(Icons.tips_and_updates_rounded),
+            title: const Text('Empfohlener naechster Schritt'),
+            subtitle: Text(recommendationText),
+          ),
+        ),
       ],
     );
   }
