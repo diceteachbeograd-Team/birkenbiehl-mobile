@@ -6,14 +6,19 @@ class StartScreen extends StatelessWidget {
   const StartScreen({
     super.key,
     required this.profile,
+    required this.currentStepLabel,
+    required this.completedLoops,
   });
 
   final AssistiveProfile profile;
+  final String currentStepLabel;
+  final int completedLoops;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    final activeHelpText = _activeHelpText(profile);
+
+    return ListView(
       children: [
         Text(
           'Start',
@@ -36,16 +41,27 @@ class StartScreen extends StatelessWidget {
           child: ListTile(
             leading: const Icon(Icons.route_rounded),
             title: const Text('Birkenbihl-Lernloop'),
-            subtitle: const Text('Dekodieren -> Hoeren -> Antworten -> Transfer'),
+            subtitle: Text('Aktuell: $currentStepLabel'),
           ),
         ),
         const SizedBox(height: 8),
-        Text(
-          'Hilfen aktiv: ${profile.hearingAssist ? 'Hoeren ' : ''}${profile.visionAssist ? 'Sehen' : ''}'.trim().isEmpty
-              ? 'Keine'
-              : '${profile.hearingAssist ? 'Hoeren ' : ''}${profile.visionAssist ? 'Sehen' : ''}',
-        ),
+        Text('Abgeschlossene Loops: $completedLoops'),
+        Text('Hilfen aktiv: $activeHelpText'),
       ],
     );
+  }
+
+  String _activeHelpText(AssistiveProfile profile) {
+    final parts = <String>[];
+    if (profile.hearingAssist) {
+      parts.add('Hoeren');
+    }
+    if (profile.visionAssist) {
+      parts.add('Sehen');
+    }
+    if (parts.isEmpty) {
+      return 'Keine';
+    }
+    return parts.join(' + ');
   }
 }

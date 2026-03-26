@@ -20,4 +20,20 @@ void main() {
     expect(find.byKey(const Key('hearingAssistToggle')), findsOneWidget);
     expect(find.byKey(const Key('visionAssistToggle')), findsOneWidget);
   });
+
+  testWidgets('Learning loop advances from decode to listen', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const BirkenbiehlApp());
+
+    await tester.tap(find.text('Uebung'));
+    await tester.pump();
+
+    expect(find.textContaining('Aktueller Schritt: Dekodieren'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('nextLearningStepButton')));
+    await tester.pump();
+
+    expect(find.textContaining('Aktueller Schritt: Hoeren'), findsOneWidget);
+  });
 }

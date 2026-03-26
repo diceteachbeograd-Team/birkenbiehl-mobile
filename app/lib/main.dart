@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'core/models/assistive_profile.dart';
 import 'features/exercises/exercises_screen.dart';
+import 'features/learning/models/exercise_template.dart';
+import 'features/learning/models/learning_step.dart';
 import 'features/listening/listening_screen.dart';
 import 'features/parent/parent_mode_screen.dart';
 import 'features/progress/progress_screen.dart';
@@ -41,6 +43,10 @@ class _MainShellState extends State<MainShell> {
     visionAssist: false,
   );
 
+  final ExerciseTemplate _activeTemplate = kA1Templates.first;
+  int _currentLearningStepIndex = 0;
+  int _completedLoops = 0;
+
   static const List<({String label, IconData icon})> _tabs = [
     (label: 'Start', icon: Icons.home_rounded),
     (label: 'Sprechen', icon: Icons.mic_rounded),
@@ -52,6 +58,9 @@ class _MainShellState extends State<MainShell> {
 
   @override
   Widget build(BuildContext context) {
+    final currentStepLabel =
+        _activeTemplate.steps[_currentLearningStepIndex].label;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Birkenbiehl Mobile')),
       body: Padding(
@@ -59,7 +68,9 @@ class _MainShellState extends State<MainShell> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(child: _buildScreen()),
+            Expanded(
+              child: _buildScreen(currentStepLabel),
+            ),
             const SizedBox(height: 8),
             SwitchListTile(
               key: const Key('hearingAssistToggle'),
@@ -101,20 +112,59 @@ class _MainShellState extends State<MainShell> {
     );
   }
 
-  Widget _buildScreen() {
+  Widget _buildScreen(String currentStepLabel) {
     switch (_currentIndex) {
       case 0:
-        return StartScreen(profile: _profile);
+        return StartScreen(
+          profile: _profile,
+          currentStepLabel: currentStepLabel,
+          completedLoops: _completedLoops,
+        );
       case 1:
         return const SpeakingScreen();
       case 2:
         return const ListeningScreen();
       case 3:
-        return const ExercisesScreen();
+        return ExercisesScreen(
+          template: _activeTemplate,
+          currentStepIndex: _currentLearningStepIndex,
+          onNextStep: _nextLearningStep,
+          onPrevStep: _prevLearningStep,
+          onReset: _resetLearningLoop,
+        );
       case 4:
-        return const ProgressScreen();
+        return ProgressScreen(
+          completedLoops: _completedLoops,
+          currentTemplateTitle: _activeTemplate.title,
+          currentStepLabel: currentStepLabel,
+        );
       default:
         return const ParentModeScreen();
     }
+  }
+
+  void _nextLearningStep() {
+    setState(() {
+      if (_currentLearningStepIndex < _activeTemplate.steps.length - 1) {
+        _currentLearningStepIndex++;
+      } else {
+        _completedLoops++;
+        _currentLearningStepIndex = 0;
+      }
+    });
+  }
+
+  void _prevLearningStep() {
+    setState(() {
+      if (_currentLearningStepIndex > 0) {
+        _currentLearningStepIndex--;
+      }
+    });
+  }
+
+  void _resetLearningLoop() {
+    setState(() {
+      _currentLearningStepIndex = 0;
+    });
   }
 }
