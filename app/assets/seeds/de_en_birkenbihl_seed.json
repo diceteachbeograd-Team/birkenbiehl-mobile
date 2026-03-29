@@ -1,0 +1,555 @@
+{
+  "schema_version": "1.0",
+  "seed_version": "de-en-birkenbihl-v1",
+  "language_pair": {
+    "l1": "de",
+    "l2": "en"
+  },
+  "pedagogy": "birkenbihl_decode_passive_active_transfer",
+  "pedagogy_profile": {
+    "age_range": "6-7",
+    "ethics": [
+      "No pressure, no shame, no punitive streak mechanics.",
+      "Comprehension comes before speaking accuracy.",
+      "Content should remain child-safe, everyday and emotionally appropriate."
+    ],
+    "accessibility": {
+      "hearing_support": [
+        "Chunk-level visual support for all core prompts.",
+        "Optional slower playback with pauses and repeat-per-chunk.",
+        "Non-audio feedback cues such as vibration or animation."
+      ],
+      "vision_support": [
+        "High-contrast UI and large tap targets.",
+        "Audio descriptions for visual cues.",
+        "Screenreader-friendly ordering and concise labels."
+      ]
+    }
+  },
+  "evaluation_heuristic": {
+    "name": "pattern_match_score",
+    "formula": "matched_core_patterns / total_core_patterns",
+    "pass_threshold_by_level": {
+      "A1.1": 0.70,
+      "A1.2": 0.72,
+      "A2.1": 0.75,
+      "A2.2": 0.78,
+      "B1.1": 0.82,
+      "B1.2": 0.85
+    },
+    "notes": [
+      "Accept short forms and meaning-preserving variants.",
+      "Deduct only when the pattern no longer serves the intended communicative function.",
+      "Transfer items may pass with one missing helper word if the intent remains clear."
+    ]
+  },
+  "exercises": [
+    {
+      "id": "de_en_a11_01",
+      "level": "A1.1",
+      "phase": "decode",
+      "context": "greeting and self-introduction",
+      "prompt_l1": "Dekodiere den Satz in Chunks: Good morning, I am Mia.",
+      "prompt_l2": "Decode the sentence in chunks: Good morning, I am Mia.",
+      "decode_map": [
+        {"l2": "Good morning", "l1": "Guten Morgen"},
+        {"l2": "I am", "l1": "ich bin"},
+        {"l2": "Mia", "l1": "Mia"}
+      ],
+      "expected_patterns": ["good morning", "i am"],
+      "audio_hint": "Slow, warm voice, 2 full repeats, then 1 chunked repeat with pauses.",
+      "assistive_hints": [
+        "Show the full sentence before tapping chunks.",
+        "Point to the speaker while hearing I am.",
+        "Allow I am and I'm as equivalent in later rounds."
+      ]
+    },
+    {
+      "id": "de_en_a11_02",
+      "level": "A1.1",
+      "phase": "passive_listen",
+      "context": "classroom instruction",
+      "prompt_l1": "Hoere nebenbei: Open the book, please.",
+      "prompt_l2": "Listen in the background: Open the book, please.",
+      "decode_map": [
+        {"l2": "Open", "l1": "oeffne"},
+        {"l2": "the book", "l1": "das Buch"},
+        {"l2": "please", "l1": "bitte"}
+      ],
+      "expected_patterns": ["open", "the book", "please"],
+      "audio_hint": "Very clear child-friendly voice, 5 calm loops, slight pause after open.",
+      "assistive_hints": [
+        "Pair with a real book movement.",
+        "No speaking pressure during the first loops.",
+        "Keep volume low and non-intrusive."
+      ]
+    },
+    {
+      "id": "de_en_a11_03",
+      "level": "A1.1",
+      "phase": "active_apply",
+      "context": "name and origin",
+      "prompt_l1": "Sage: My name is Leo. I am from Berlin. Ersetze Name und Ort durch eigene Angaben.",
+      "prompt_l2": "Say: My name is Leo. I am from Berlin. Replace name and place with your own.",
+      "decode_map": [
+        {"l2": "My name is", "l1": "mein Name ist"},
+        {"l2": "I am from", "l1": "ich komme aus"},
+        {"l2": "Berlin", "l1": "Berlin"}
+      ],
+      "expected_patterns": ["my name is", "i am from"],
+      "audio_hint": "Model once slowly, once at natural speed, then leave a response gap.",
+      "assistive_hints": [
+        "Offer a sentence frame on screen.",
+        "Accept one-part answers first, then invite the second part.",
+        "Use visual cards for name and city."
+      ]
+    },
+    {
+      "id": "de_en_a11_04",
+      "level": "A1.1",
+      "phase": "transfer",
+      "context": "feelings and simple needs",
+      "prompt_l1": "Aendere das Muster fuer dich: I am happy. I need water.",
+      "prompt_l2": "Change the pattern for yourself: I am happy. I need water.",
+      "decode_map": [
+        {"l2": "I am happy", "l1": "ich bin froh"},
+        {"l2": "I need", "l1": "ich brauche"},
+        {"l2": "water", "l1": "Wasser"}
+      ],
+      "expected_patterns": ["i am", "i need"],
+      "audio_hint": "Two expressive models with emotion change, then one silent response gap.",
+      "assistive_hints": [
+        "Swap only the feeling or the need, not both at once.",
+        "Use picture cards for happy, tired, water, help.",
+        "Meaning is more important than perfect pronunciation."
+      ]
+    },
+    {
+      "id": "de_en_a12_01",
+      "level": "A1.2",
+      "phase": "decode",
+      "context": "family",
+      "prompt_l1": "Dekodiere: This is my brother. He is ten.",
+      "prompt_l2": "Decode: This is my brother. He is ten.",
+      "decode_map": [
+        {"l2": "This is", "l1": "das ist"},
+        {"l2": "my brother", "l1": "mein Bruder"},
+        {"l2": "He is ten", "l1": "er ist zehn"}
+      ],
+      "expected_patterns": ["this is", "my brother", "he is"],
+      "audio_hint": "Slow first pass, then normal pace, small pause between the two sentences.",
+      "assistive_hints": [
+        "Show one family photo or drawing.",
+        "Highlight my as ownership, not as an isolated grammar term.",
+        "Accept sister as a transfer variation after decoding."
+      ]
+    },
+    {
+      "id": "de_en_a12_02",
+      "level": "A1.2",
+      "phase": "passive_listen",
+      "context": "food preferences",
+      "prompt_l1": "Hoere entspannt: I like apples. I do not like milk.",
+      "prompt_l2": "Listen calmly: I like apples. I do not like milk.",
+      "decode_map": [
+        {"l2": "I like", "l1": "ich mag"},
+        {"l2": "apples", "l1": "Aepfel"},
+        {"l2": "I do not like", "l1": "ich mag nicht"},
+        {"l2": "milk", "l1": "Milch"}
+      ],
+      "expected_patterns": ["i like", "i do not like"],
+      "audio_hint": "Gentle contrastive stress on like and do not like, 4 loops.",
+      "assistive_hints": [
+        "Use food pictures, not word lists.",
+        "Keep the negative pattern as one chunk.",
+        "Later invite a personal variant with one new food."
+      ]
+    },
+    {
+      "id": "de_en_a12_03",
+      "level": "A1.2",
+      "phase": "active_apply",
+      "context": "school preferences",
+      "prompt_l1": "Antworte mit zwei Teilen: I like music, but I do not like math.",
+      "prompt_l2": "Answer in two parts: I like music, but I do not like math.",
+      "decode_map": [
+        {"l2": "I like", "l1": "ich mag"},
+        {"l2": "music", "l1": "Musik"},
+        {"l2": "but", "l1": "aber"},
+        {"l2": "I do not like", "l1": "ich mag nicht"},
+        {"l2": "math", "l1": "Mathe"}
+      ],
+      "expected_patterns": ["i like", "but", "i do not like"],
+      "audio_hint": "One model with clear contrast, then learner response time.",
+      "assistive_hints": [
+        "Offer two school subject icons to choose from.",
+        "If needed, remove but and practice one sentence first.",
+        "Reward meaningful contrast, not accent perfection."
+      ]
+    },
+    {
+      "id": "de_en_a12_04",
+      "level": "A1.2",
+      "phase": "transfer",
+      "context": "location in the room",
+      "prompt_l1": "Uebertrage das Muster: The ball is under the chair. Tausche Objekt oder Ort.",
+      "prompt_l2": "Transfer the pattern: The ball is under the chair. Change the object or the place.",
+      "decode_map": [
+        {"l2": "The ball", "l1": "der Ball"},
+        {"l2": "is under", "l1": "ist unter"},
+        {"l2": "the chair", "l1": "dem Stuhl"}
+      ],
+      "expected_patterns": ["is under", "the"],
+      "audio_hint": "Natural classroom voice, 2 models with gesture to the correct place.",
+      "assistive_hints": [
+        "Change only one variable first: ball to book or chair to table.",
+        "Use real objects in the room.",
+        "Meaningful preposition use matters more than article accuracy."
+      ]
+    },
+    {
+      "id": "de_en_a21_01",
+      "level": "A2.1",
+      "phase": "decode",
+      "context": "daily routine",
+      "prompt_l1": "Dekodiere: I get up at seven and go to school by bus.",
+      "prompt_l2": "Decode: I get up at seven and go to school by bus.",
+      "decode_map": [
+        {"l2": "I get up", "l1": "ich stehe auf"},
+        {"l2": "at seven", "l1": "um sieben"},
+        {"l2": "go to school", "l1": "gehe zur Schule"},
+        {"l2": "by bus", "l1": "mit dem Bus"}
+      ],
+      "expected_patterns": ["i get up", "at seven", "go to school", "by bus"],
+      "audio_hint": "Steady rhythm with a small pause before and, then one full fluent version.",
+      "assistive_hints": [
+        "Animate the routine with icons.",
+        "Keep time as a chunk, not as isolated numbers practice.",
+        "Invite a personal time change only after comprehension is stable."
+      ]
+    },
+    {
+      "id": "de_en_a21_02",
+      "level": "A2.1",
+      "phase": "passive_listen",
+      "context": "directions",
+      "prompt_l1": "Hoere mehrmals: Go straight, then turn left at the park.",
+      "prompt_l2": "Listen several times: Go straight, then turn left at the park.",
+      "decode_map": [
+        {"l2": "Go straight", "l1": "geh geradeaus"},
+        {"l2": "then", "l1": "dann"},
+        {"l2": "turn left", "l1": "bieg links ab"},
+        {"l2": "at the park", "l1": "am Park"}
+      ],
+      "expected_patterns": ["go straight", "turn left", "at the park"],
+      "audio_hint": "Clear directional emphasis, 5 loops, with a short map animation if available.",
+      "assistive_hints": [
+        "Use a simple map with one landmark.",
+        "Do not add right until left is stable.",
+        "Later ask the learner to trace the path silently while listening."
+      ]
+    },
+    {
+      "id": "de_en_a21_03",
+      "level": "A2.1",
+      "phase": "active_apply",
+      "context": "weekend activity",
+      "prompt_l1": "Sprich mit Satzrahmen: On Saturday I play football with my friends.",
+      "prompt_l2": "Speak with the frame: On Saturday I play football with my friends.",
+      "decode_map": [
+        {"l2": "On Saturday", "l1": "am Samstag"},
+        {"l2": "I play", "l1": "ich spiele"},
+        {"l2": "football", "l1": "Fussball"},
+        {"l2": "with my friends", "l1": "mit meinen Freunden"}
+      ],
+      "expected_patterns": ["on saturday", "i play", "with my friends"],
+      "audio_hint": "Model once with natural joy, then leave a long answer gap.",
+      "assistive_hints": [
+        "Swap Saturday or the activity first.",
+        "Use hobby cards to reduce search load.",
+        "Accept singular friend if meaning stays clear."
+      ]
+    },
+    {
+      "id": "de_en_a21_04",
+      "level": "A2.1",
+      "phase": "transfer",
+      "context": "shopping",
+      "prompt_l1": "Nutze das Muster in neuem Kontext: How much is this T-shirt? It is twelve pounds.",
+      "prompt_l2": "Use the pattern in a new context: How much is this T-shirt? It is twelve pounds.",
+      "decode_map": [
+        {"l2": "How much is", "l1": "wie viel kostet"},
+        {"l2": "this T-shirt", "l1": "dieses T-Shirt"},
+        {"l2": "It is", "l1": "es kostet"},
+        {"l2": "twelve pounds", "l1": "zwoelf Pfund"}
+      ],
+      "expected_patterns": ["how much is", "it is"],
+      "audio_hint": "Two-speaker model, shopper and clerk, medium pace.",
+      "assistive_hints": [
+        "Change product before changing price.",
+        "Numbers can be supported visually.",
+        "If needed, accept euros with the same pattern."
+      ]
+    },
+    {
+      "id": "de_en_a22_01",
+      "level": "A2.2",
+      "phase": "decode",
+      "context": "yesterday",
+      "prompt_l1": "Dekodiere: Yesterday we visited grandma and played cards.",
+      "prompt_l2": "Decode: Yesterday we visited grandma and played cards.",
+      "decode_map": [
+        {"l2": "Yesterday", "l1": "gestern"},
+        {"l2": "we visited", "l1": "wir haben besucht"},
+        {"l2": "grandma", "l1": "Oma"},
+        {"l2": "played cards", "l1": "Karten gespielt"}
+      ],
+      "expected_patterns": ["yesterday", "we visited", "played cards"],
+      "audio_hint": "Gentle storytelling voice, slight pause after yesterday.",
+      "assistive_hints": [
+        "Treat we visited as one usable past chunk.",
+        "Support with a simple picture sequence.",
+        "Do not explain past tense labels unless asked."
+      ]
+    },
+    {
+      "id": "de_en_a22_02",
+      "level": "A2.2",
+      "phase": "passive_listen",
+      "context": "tomorrow plan",
+      "prompt_l1": "Hoere wiederholt: Tomorrow I am going to the museum with my class.",
+      "prompt_l2": "Listen repeatedly: Tomorrow I am going to the museum with my class.",
+      "decode_map": [
+        {"l2": "Tomorrow", "l1": "morgen"},
+        {"l2": "I am going to", "l1": "ich gehe"},
+        {"l2": "the museum", "l1": "ins Museum"},
+        {"l2": "with my class", "l1": "mit meiner Klasse"}
+      ],
+      "expected_patterns": ["tomorrow", "i am going to", "with my class"],
+      "audio_hint": "Soft anticipatory tone, 4 loops, slight lift on tomorrow.",
+      "assistive_hints": [
+        "Keep am going to as one future-planning chunk.",
+        "Use a calendar icon for tomorrow.",
+        "Later allow the learner to swap museum for zoo or park."
+      ]
+    },
+    {
+      "id": "de_en_a22_03",
+      "level": "A2.2",
+      "phase": "active_apply",
+      "context": "health and short problem statement",
+      "prompt_l1": "Antworte kurz und klar: My head hurts. I need water and a short break.",
+      "prompt_l2": "Answer briefly and clearly: My head hurts. I need water and a short break.",
+      "decode_map": [
+        {"l2": "My head hurts", "l1": "mein Kopf tut weh"},
+        {"l2": "I need", "l1": "ich brauche"},
+        {"l2": "water", "l1": "Wasser"},
+        {"l2": "a short break", "l1": "eine kurze Pause"}
+      ],
+      "expected_patterns": ["my head hurts", "i need"],
+      "audio_hint": "Calm supportive voice, model once, then a response gap for imitation or adaptation.",
+      "assistive_hints": [
+        "Offer pain icons for head, stomach, throat.",
+        "Keep the request formula constant while changing the problem.",
+        "Functional clarity matters more than full sentence length."
+      ]
+    },
+    {
+      "id": "de_en_a22_04",
+      "level": "A2.2",
+      "phase": "transfer",
+      "context": "missed bus and solution",
+      "prompt_l1": "Veraendere das Muster: I missed the bus, so I will call my mother.",
+      "prompt_l2": "Change the pattern: I missed the bus, so I will call my mother.",
+      "decode_map": [
+        {"l2": "I missed", "l1": "ich habe verpasst"},
+        {"l2": "the bus", "l1": "den Bus"},
+        {"l2": "so", "l1": "also"},
+        {"l2": "I will call", "l1": "ich werde anrufen"},
+        {"l2": "my mother", "l1": "meine Mutter"}
+      ],
+      "expected_patterns": ["i missed", "so", "i will call"],
+      "audio_hint": "Short dramatic problem-solution contrast, 2 modeled versions.",
+      "assistive_hints": [
+        "Change only the problem first: bus to train, book, key.",
+        "Keep so as the bridge from problem to action.",
+        "Accept gonna only in advanced repetitions, not as the base form."
+      ]
+    },
+    {
+      "id": "de_en_b11_01",
+      "level": "B1.1",
+      "phase": "decode",
+      "context": "preference with reason",
+      "prompt_l1": "Dekodiere: I prefer the train because it is faster and less stressful.",
+      "prompt_l2": "Decode: I prefer the train because it is faster and less stressful.",
+      "decode_map": [
+        {"l2": "I prefer", "l1": "ich bevorzuge"},
+        {"l2": "the train", "l1": "den Zug"},
+        {"l2": "because", "l1": "weil"},
+        {"l2": "it is faster", "l1": "er schneller ist"},
+        {"l2": "less stressful", "l1": "weniger stressig"}
+      ],
+      "expected_patterns": ["i prefer", "because", "less stressful"],
+      "audio_hint": "Balanced explanatory tone, clear stress on prefer and because.",
+      "assistive_hints": [
+        "Keep because attached to a reason chunk.",
+        "Allow easier adjective swaps such as cheaper or easier.",
+        "Do not force full accuracy on comparative forms in the first round."
+      ]
+    },
+    {
+      "id": "de_en_b11_02",
+      "level": "B1.1",
+      "phase": "passive_listen",
+      "context": "retelling a simple outing",
+      "prompt_l1": "Hoere die Reihenfolge mehrfach: First we packed our bags, then we drove to the lake, and later we had a picnic.",
+      "prompt_l2": "Listen to the sequence several times: First we packed our bags, then we drove to the lake, and later we had a picnic.",
+      "decode_map": [
+        {"l2": "First", "l1": "zuerst"},
+        {"l2": "we packed our bags", "l1": "wir haben unsere Taschen gepackt"},
+        {"l2": "then we drove", "l1": "dann sind wir gefahren"},
+        {"l2": "later we had a picnic", "l1": "spaeter hatten wir ein Picknick"}
+      ],
+      "expected_patterns": ["first", "then", "later"],
+      "audio_hint": "Story pace with clear sequence markers, 3 loops, no rush.",
+      "assistive_hints": [
+        "Show a 3-step picture strip.",
+        "Sequence markers are the main target, not every past form.",
+        "Invite silent pointing to the correct picture order while listening."
+      ]
+    },
+    {
+      "id": "de_en_b11_03",
+      "level": "B1.1",
+      "phase": "active_apply",
+      "context": "comparing options",
+      "prompt_l1": "Begruende deine Wahl: I think the blue backpack is better for school because it has more space.",
+      "prompt_l2": "Give a reason for your choice: I think the blue backpack is better for school because it has more space.",
+      "decode_map": [
+        {"l2": "I think", "l1": "ich denke"},
+        {"l2": "is better", "l1": "ist besser"},
+        {"l2": "for school", "l1": "fuer die Schule"},
+        {"l2": "because", "l1": "weil"},
+        {"l2": "it has more space", "l1": "es mehr Platz hat"}
+      ],
+      "expected_patterns": ["i think", "is better", "because", "more space"],
+      "audio_hint": "Natural persuasive tone with a long pause for learner choice.",
+      "assistive_hints": [
+        "Offer two visible options only.",
+        "A short reason is enough if the choice pattern is correct.",
+        "Allow color or size changes while keeping the reason frame."
+      ]
+    },
+    {
+      "id": "de_en_b11_04",
+      "level": "B1.1",
+      "phase": "transfer",
+      "context": "asking for clarification",
+      "prompt_l1": "Uebertrage das Hilfsmuster: Could you say that again more slowly? I understood the first part, but not the last word.",
+      "prompt_l2": "Transfer the support pattern: Could you say that again more slowly? I understood the first part, but not the last word.",
+      "decode_map": [
+        {"l2": "Could you say that again", "l1": "koenntest du das noch einmal sagen"},
+        {"l2": "more slowly", "l1": "langsamer"},
+        {"l2": "I understood", "l1": "ich habe verstanden"},
+        {"l2": "the first part", "l1": "den ersten Teil"},
+        {"l2": "not the last word", "l1": "nicht das letzte Wort"}
+      ],
+      "expected_patterns": ["could you say that again", "more slowly", "i understood"],
+      "audio_hint": "Helpful peer-to-peer tone, 2 versions: polite and slightly more urgent.",
+      "assistive_hints": [
+        "This pattern protects communication and should be overlearned.",
+        "Swap last word with last sentence only after the base frame is stable.",
+        "Reward repair behavior, not just grammar accuracy."
+      ]
+    },
+    {
+      "id": "de_en_b12_01",
+      "level": "B1.2",
+      "phase": "decode",
+      "context": "learning advice",
+      "prompt_l1": "Dekodiere: If you want to learn faster, listen first and speak in short patterns.",
+      "prompt_l2": "Decode: If you want to learn faster, listen first and speak in short patterns.",
+      "decode_map": [
+        {"l2": "If you want to", "l1": "wenn du willst"},
+        {"l2": "learn faster", "l1": "schneller lernen"},
+        {"l2": "listen first", "l1": "hoere zuerst"},
+        {"l2": "speak in short patterns", "l1": "sprich in kurzen Mustern"}
+      ],
+      "expected_patterns": ["if you want to", "listen first", "speak in short patterns"],
+      "audio_hint": "Confident coaching tone, one slow version and one natural version.",
+      "assistive_hints": [
+        "Keep the advice structure as one chunked sequence.",
+        "This item can bridge pedagogy and learner reflection.",
+        "Allow slower or better instead of faster in transfer rounds."
+      ]
+    },
+    {
+      "id": "de_en_b12_02",
+      "level": "B1.2",
+      "phase": "passive_listen",
+      "context": "changing an appointment",
+      "prompt_l1": "Hoere den Grund-Zusammenhang: We need to change the meeting because my brother has a doctor appointment.",
+      "prompt_l2": "Listen to the cause-and-change relation: We need to change the meeting because my brother has a doctor appointment.",
+      "decode_map": [
+        {"l2": "We need to change", "l1": "wir muessen aendern"},
+        {"l2": "the meeting", "l1": "das Treffen"},
+        {"l2": "because", "l1": "weil"},
+        {"l2": "my brother has", "l1": "mein Bruder hat"},
+        {"l2": "a doctor appointment", "l1": "einen Arzttermin"}
+      ],
+      "expected_patterns": ["we need to change", "because", "doctor appointment"],
+      "audio_hint": "Calm planning voice, 4 loops, emphasis on the reason link.",
+      "assistive_hints": [
+        "Use a calendar icon and one family icon.",
+        "Keep because visible during listening.",
+        "Later switch brother to mother, teacher or friend."
+      ]
+    },
+    {
+      "id": "de_en_b12_03",
+      "level": "B1.2",
+      "phase": "active_apply",
+      "context": "reflecting on progress",
+      "prompt_l1": "Erzaehle kurz mit Wendepunkt: Last week I felt nervous, but then I practiced every day and became more confident.",
+      "prompt_l2": "Tell it briefly with a turning point: Last week I felt nervous, but then I practiced every day and became more confident.",
+      "decode_map": [
+        {"l2": "Last week", "l1": "letzte Woche"},
+        {"l2": "I felt nervous", "l1": "ich war nervoes"},
+        {"l2": "but then", "l1": "aber dann"},
+        {"l2": "I practiced every day", "l1": "ich habe jeden Tag geuebt"},
+        {"l2": "became more confident", "l1": "wurde sicherer"}
+      ],
+      "expected_patterns": ["last week", "but then", "i practiced every day", "more confident"],
+      "audio_hint": "Reflective tone, one full model, then generous response time.",
+      "assistive_hints": [
+        "Let the learner replace nervous with another real feeling.",
+        "Keep the turning point but then in place.",
+        "A shorter personal version still counts if the growth pattern is clear."
+      ]
+    },
+    {
+      "id": "de_en_b12_04",
+      "level": "B1.2",
+      "phase": "transfer",
+      "context": "opinion, reason and plan",
+      "prompt_l1": "Nutze Meinung plus Plan: In my opinion, children should play outside more often because they learn teamwork and stay active. This week I want to plan one outdoor game.",
+      "prompt_l2": "Use opinion plus plan: In my opinion, children should play outside more often because they learn teamwork and stay active. This week I want to plan one outdoor game.",
+      "decode_map": [
+        {"l2": "In my opinion", "l1": "meiner Meinung nach"},
+        {"l2": "should play outside more often", "l1": "sollten oefter draussen spielen"},
+        {"l2": "because", "l1": "weil"},
+        {"l2": "learn teamwork", "l1": "Teamarbeit lernen"},
+        {"l2": "stay active", "l1": "aktiv bleiben"},
+        {"l2": "This week I want to plan", "l1": "diese Woche moechte ich planen"}
+      ],
+      "expected_patterns": ["in my opinion", "because", "this week i want to plan"],
+      "audio_hint": "Persuasive but friendly tone, split into opinion sentence and plan sentence.",
+      "assistive_hints": [
+        "If needed, keep only one reason instead of two.",
+        "Change the activity before changing the whole opinion frame.",
+        "This is a high-support B1 transfer item, not a free essay."
+      ]
+    }
+  ]
+}

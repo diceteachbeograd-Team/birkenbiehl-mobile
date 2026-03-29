@@ -6,6 +6,7 @@ import 'core/models/assistive_profile.dart';
 import 'features/exercises/exercises_screen.dart';
 import 'features/learning/models/exercise_template.dart';
 import 'features/learning/models/learning_step.dart';
+import 'features/learning/services/seed_content_repository.dart';
 import 'features/listening/listening_screen.dart';
 import 'features/parent/parent_mode_screen.dart';
 import 'features/progress/progress_screen.dart';
@@ -44,6 +45,7 @@ class MainShell extends StatefulWidget {
 class _MainShellState extends State<MainShell> {
   final LocalProgressStore _progressStore = LocalProgressStore();
   final ExportService _exportService = ExportService();
+  final SeedContentRepository _seedRepository = const SeedContentRepository();
 
   int _currentIndex = 0;
   bool _isLoading = true;
@@ -61,6 +63,7 @@ class _MainShellState extends State<MainShell> {
   );
 
   ExerciseTemplate _activeTemplate = kA1Templates.first;
+  List<ExerciseTemplate> _templates = kA1Templates;
   int _currentLearningStepIndex = 0;
   int _completedLoops = 0;
   int _successStreak = 0;
@@ -240,7 +243,7 @@ class _MainShellState extends State<MainShell> {
           hearingAssist: _profile.hearingAssist,
           visionAssist: _profile.visionAssist,
           lastUpdatedLabel: _lastUpdatedLabel,
-          templates: kA1Templates
+          templates: _templates
               .map(
                 (template) => ParentTemplateOption(
                   id: template.id,
@@ -284,49 +287,74 @@ class _MainShellState extends State<MainShell> {
   }
 
   Future<void> _loadState() async {
-    final snapshot = await _progressStore.load(kA1Templates.first.id);
-    final template = _templateById(snapshot.templateId);
-    final maxStepIndex = template.steps.length - 1;
+    try {
+      final seededTemplates = await _seedRepository.loadTemplatesOrFallback();
+      final templates = seededTemplates.isEmpty ? kA1Templates : seededTemplates;
 
-    if (!mounted) {
-      return;
-    }
+      await _progressStore.ensureSeeded(
+        seedVersion: 'de-en-birkenbihl-v1',
+        defaultTemplateId: templates.first.id,
+      );
 
-    setState(() {
-      _profile = AssistiveProfile(
-        hearingAssist: snapshot.hearingAssist,
-        visionAssist: snapshot.visionAssist,
-      );
-      _activeTemplate = template;
-      _currentLearningStepIndex = snapshot.currentStepIndex.clamp(
-        0,
-        maxStepIndex,
-      );
-      _completedLoops = snapshot.completedLoops;
-      _successStreak = snapshot.successStreak;
-      _struggleStreak = snapshot.struggleStreak;
-      _adaptiveAssistHint = snapshot.adaptiveAssistHint;
-      _recentEvents = snapshot.recentEvents;
-      _gameStars = snapshot.gameStars;
-      _gameBadges = snapshot.gameBadges;
-      _questProgress = snapshot.questProgress;
-      if (snapshot.uiLanguageCode != null) {
-        _uiLanguageCode = AppStrings.normalizeCode(snapshot.uiLanguageCode);
+      final snapshot = await _progressStore.load(templates.first.id);
+      final template = templates
+              .where((candidate) => candidate.id == snapshot.templateId)
+              .firstOrNull ??
+          templates.first;
+      final maxStepIndex = template.steps.length - 1;
+
+      if (!mounted) {
+        return;
       }
-      _setupCompleted = snapshot.setupCompleted;
-      _selectedLanguage = snapshot.selectedLanguage;
-      _selectedLevel = snapshot.selectedLevel;
-      _selectedContext = snapshot.selectedContext;
-      _lastUpdatedAt = snapshot.lastUpdatedAt;
-      _isLoading = false;
-    });
+
+      setState(() {
+        _profile = AssistiveProfile(
+          hearingAssist: snapshot.hearingAssist,
+          visionAssist: snapshot.visionAssist,
+        );
+        _templates = templates;
+        _activeTemplate = template;
+        _currentLearningStepIndex = snapshot.currentStepIndex.clamp(
+          0,
+          maxStepIndex,
+        );
+        _completedLoops = snapshot.completedLoops;
+        _successStreak = snapshot.successStreak;
+        _struggleStreak = snapshot.struggleStreak;
+        _adaptiveAssistHint = snapshot.adaptiveAssistHint;
+        _recentEvents = snapshot.recentEvents;
+        _gameStars = snapshot.gameStars;
+        _gameBadges = snapshot.gameBadges;
+        _questProgress = snapshot.questProgress;
+        if (snapshot.uiLanguageCode != null) {
+          _uiLanguageCode = AppStrings.normalizeCode(snapshot.uiLanguageCode);
+        }
+        _setupCompleted = snapshot.setupCompleted;
+        _selectedLanguage = snapshot.selectedLanguage;
+        _selectedLevel = snapshot.selectedLevel;
+        _selectedContext = snapshot.selectedContext;
+        _lastUpdatedAt = snapshot.lastUpdatedAt;
+        _isLoading = false;
+      });
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _templates = kA1Templates;
+        _activeTemplate = kA1Templates.first;
+        _currentLearningStepIndex = 0;
+        _setupCompleted = false;
+        _isLoading = false;
+      });
+    }
   }
 
   ExerciseTemplate _templateById(String templateId) {
-    return kA1Templates
+    return _templates
             .where((template) => template.id == templateId)
             .firstOrNull ??
-        kA1Templates.first;
+        _templates.first;
   }
 
   void _markSuccess() {
@@ -376,11 +404,11 @@ class _MainShellState extends State<MainShell> {
   }
 
   void _rotateTemplateAfterCompletedLoop() {
-    if (kA1Templates.isEmpty) {
+    if (_templates.isEmpty) {
       return;
     }
-    final nextIndex = _completedLoops % kA1Templates.length;
-    _activeTemplate = kA1Templates[nextIndex];
+    final nextIndex = _completedLoops % _templates.length;
+    _activeTemplate = _templates[nextIndex];
     _adaptiveAssistHint = false;
   }
 
@@ -498,15 +526,27 @@ class _MainShellState extends State<MainShell> {
   ExerciseTemplate _selectTemplateForContext() {
     final context = _selectedContext;
     if (context == 'school') {
-      return _templateById('a1_school_01');
+      return _templateByContextKeyword('school');
     }
     if (context == 'family') {
-      return _templateById('a1_family_01');
+      return _templateByContextKeyword('family');
     }
     if (context == 'travel') {
-      return _templateById('a1_travel_01');
+      return _templateByContextKeyword('travel');
     }
     return _activeTemplate;
+  }
+
+  ExerciseTemplate _templateByContextKeyword(String keyword) {
+    final lower = keyword.toLowerCase();
+    for (final template in _templates) {
+      final id = template.id.toLowerCase();
+      final title = template.title.toLowerCase();
+      if (id.contains(lower) || title.contains(lower)) {
+        return template;
+      }
+    }
+    return _templates.first;
   }
 
   void _setActiveTemplate(String templateId) {

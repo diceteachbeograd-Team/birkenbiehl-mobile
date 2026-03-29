@@ -84,6 +84,26 @@ class LocalProgressStore {
   static const _keySelectedContext = 'selected_context';
   static const _keyUiLanguageCode = 'ui_language_code';
   static const _keyLastUpdatedAt = 'last_updated_at';
+  static const _keySeedVersion = 'seed_version';
+  static const _keySeededAt = 'seeded_at';
+
+  Future<void> ensureSeeded({
+    required String seedVersion,
+    required String defaultTemplateId,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final storedVersion = prefs.getString(_keySeedVersion);
+    if (storedVersion == seedVersion) {
+      return;
+    }
+
+    if (!prefs.containsKey(_keyTemplateId)) {
+      await prefs.setString(_keyTemplateId, defaultTemplateId);
+    }
+
+    await prefs.setString(_keySeedVersion, seedVersion);
+    await prefs.setString(_keySeededAt, DateTime.now().toIso8601String());
+  }
 
   Future<LearningAppStateSnapshot> load(String defaultTemplateId) async {
     final prefs = await SharedPreferences.getInstance();
